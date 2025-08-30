@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: peng
-@file: span.py
-@time: 2025/1/17  16:57
-"""
-
 from contextlib import asynccontextmanager
 from starlette.types import Scope, Message
 from .ctx import TraceCtx

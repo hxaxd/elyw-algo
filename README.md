@@ -29,7 +29,7 @@ pip install -r requirements.txt
 createdb -U postgres elyw-algo
 
 # 2. 导入SQL文件
-psql -U postgres -d elyw-algo -f sql/ruoyi-fastapi-pg.sql
+psql -U postgres -d elyw-algo -f sql/init.sql
 
 
 # 运行后端

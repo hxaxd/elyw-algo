@@ -82,15 +82,11 @@ class MyCronTrigger(CronTrigger):
                     diff += 1
 
 
+
 SQLALCHEMY_DATABASE_URL = (
-    f'mysql+pymysql://{DataBaseConfig.db_username}:{quote_plus(DataBaseConfig.db_password)}@'
+    f'postgresql+psycopg2://{DataBaseConfig.db_username}:{quote_plus(DataBaseConfig.db_password)}@'
     f'{DataBaseConfig.db_host}:{DataBaseConfig.db_port}/{DataBaseConfig.db_database}'
 )
-if DataBaseConfig.db_type == 'postgresql':
-    SQLALCHEMY_DATABASE_URL = (
-        f'postgresql+psycopg2://{DataBaseConfig.db_username}:{quote_plus(DataBaseConfig.db_password)}@'
-        f'{DataBaseConfig.db_host}:{DataBaseConfig.db_port}/{DataBaseConfig.db_database}'
-    )
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     echo=DataBaseConfig.db_echo,

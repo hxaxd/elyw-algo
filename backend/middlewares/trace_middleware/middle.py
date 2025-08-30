@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-@author: peng
-@file: middle.py
-@time: 2025/1/17  16:57
-"""
-
 from functools import wraps
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from .span import get_current_span, Span
