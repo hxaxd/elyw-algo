@@ -15,8 +15,8 @@ def add_cors_middleware(app: FastAPI):
         'http://127.0.0.1:80',
         'http://www.elyw.com',
         'https://www.elyw.com',
-        'http://39.105.192.116',
-        'https://39.105.192.116'
+        'http://10.43.12.149',
+        'https://10.43.12.149'
     ]
 
     # 后台api允许跨域

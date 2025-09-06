@@ -1,14 +1,11 @@
 {
-  "name": "algo",
+  "name": "elyw-algo",
   "version": "1.6.2",
   "description": "算法管理系统",
-  "author": "insistence",
-  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build:prod": "vite build",
-    "build:stage": "vite build --mode staging",
     "preview": "vite preview"
   },
   "repository": {

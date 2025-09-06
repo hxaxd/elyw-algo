@@ -35,7 +35,6 @@ from utils.log_util import logger
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f'{AppConfig.app_name}开始启动')
-    worship()
     await init_create_table()
     app.state.redis = await RedisUtil.create_redis_pool()
     await RedisUtil.init_sys_dict(app.state.redis)

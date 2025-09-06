@@ -64,6 +64,5 @@ yarn install
 yarn dev
 
 # 打包前端
-yarn build:stage
 yarn build:prod
 ```

@@ -39,16 +39,8 @@ comment on table sys_dept is '小组表';
 -- ----------------------------
 -- 初始化-小组表数据
 -- ----------------------------
-insert into sys_dept values(100,  0,   '0',          '集团总公司',   0, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(101,  100, '0,100',      '深圳分公司', 1, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(102,  100, '0,100',      '长沙分公司', 2, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(103,  101, '0,100,101',  '研发小组',   1, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(104,  101, '0,100,101',  '市场小组',   2, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(105,  101, '0,100,101',  '测试小组',   3, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(106,  101, '0,100,101',  '财务小组',   4, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(107,  101, '0,100,101',  '运维小组',   5, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(108,  102, '0,100,102',  '市场小组',   1, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
-insert into sys_dept values(109,  102, '0,100,102',  '财务小组',   2, '年糕', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
+insert into sys_dept values(100,  0,   '0',          '项目组',   0, '负责人', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
+insert into sys_dept values(101,  100, '0,100',      '小组1', 1, '小组1负责人', '15888888888', 'niangao@qq.com', '0', '0', 'admin', current_timestamp, '', null);
 
 -- ----------------------------
 -- 2、用户信息表
@@ -131,16 +123,12 @@ comment on table sys_post is '职责信息表';
 -- ----------------------------
 -- 初始化-职责信息表数据
 -- ----------------------------
-insert into sys_post values(1, 'ceo',  '董事长',    1, '0', 'admin', current_timestamp, '', null, '');
-insert into sys_post values(2, 'se',   '项目经理',  2, '0', 'admin', current_timestamp, '', null, '');
-insert into sys_post values(3, 'hr',   '人力资源',  3, '0', 'admin', current_timestamp, '', null, '');
-insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', current_timestamp, '', null, '');
+insert into sys_post values(1, 'ceo',  '负责人',    1, '0', 'admin', current_timestamp, '', null, '');
 
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
 insert into sys_user values(1,  103, 'admin',   '超级管理员', '00', 'niangao@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', current_timestamp, 'admin', current_timestamp, '', null, '管理员');
-insert into sys_user values(2,  105, 'niangao', '年糕', 			'00', 'niangao@qq.com',  '15666666666', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', current_timestamp, 'admin', current_timestamp, '', null, '测试员');
 
 -- ----------------------------
 -- 4、角色信息表
@@ -184,7 +172,6 @@ comment on table sys_role is '角色信息表';
 -- 初始化-角色信息表数据
 -- ----------------------------
 insert into sys_role values(1, '超级管理员',  'admin',  1, 1, 1, 1, '0', '0', 'admin', current_timestamp, '', null, '超级管理员');
-insert into sys_role values(2, '普通角色',    'common', 2, 2, 1, 1, '0', '0', 'admin', current_timestamp, '', null, '普通角色');
 
 -- ----------------------------
 -- 5、菜单权限表
@@ -243,7 +230,6 @@ comment on table sys_menu is '菜单权限表';
 insert into sys_menu values(1, '系统管理', 0, '1', 'system',           null, '', '', 1, 0, 'M', '0', '0', '', 'system',   'admin', current_timestamp, '', null, '系统管理目录');
 insert into sys_menu values(2, '系统监控', 0, '2', 'monitor',          null, '', '', 1, 0, 'M', '0', '0', '', 'monitor',  'admin', current_timestamp, '', null, '系统监控目录');
 insert into sys_menu values(3, '系统工具', 0, '3', 'tool',             null, '', '', 1, 0, 'M', '0', '0', '', 'tool',     'admin', current_timestamp, '', null, '系统工具目录');
-insert into sys_menu values(4, '若依官网', 0, '4', 'http://ruoyi.vip', null, '', '', 0, 0, 'M', '0', '0', '', 'guide',    'admin', current_timestamp, '', null, '若依官网地址');
 -- 二级菜单
 insert into sys_menu values(100,  '用户管理', 1,   '1', 'user',       'system/user/index',        '', '', 1, 0, 'C', '0', '0', 'system:user:list',        'user',          'admin', current_timestamp, '', null, '用户管理菜单');
 insert into sys_menu values(101,  '角色管理', 1,   '2', 'role',       'system/role/index',        '', '', 1, 0, 'C', '0', '0', 'system:role:list',        'peoples',       'admin', current_timestamp, '', null, '角色管理菜单');
@@ -373,94 +359,6 @@ comment on column sys_role_menu.role_id is '角色ID';
 comment on column sys_role_menu.menu_id is '菜单ID';
 comment on table sys_role_menu is '角色和菜单关联表';
 
--- ----------------------------
--- 初始化-角色和菜单关联表数据
--- ----------------------------
-insert into sys_role_menu values (2, 1);
-insert into sys_role_menu values (2, 2);
-insert into sys_role_menu values (2, 3);
-insert into sys_role_menu values (2, 4);
-insert into sys_role_menu values (2, 100);
-insert into sys_role_menu values (2, 101);
-insert into sys_role_menu values (2, 102);
-insert into sys_role_menu values (2, 103);
-insert into sys_role_menu values (2, 104);
-insert into sys_role_menu values (2, 105);
-insert into sys_role_menu values (2, 106);
-insert into sys_role_menu values (2, 107);
-insert into sys_role_menu values (2, 108);
-insert into sys_role_menu values (2, 109);
-insert into sys_role_menu values (2, 110);
-insert into sys_role_menu values (2, 111);
-insert into sys_role_menu values (2, 112);
-insert into sys_role_menu values (2, 113);
-insert into sys_role_menu values (2, 114);
-insert into sys_role_menu values (2, 115);
-insert into sys_role_menu values (2, 116);
-insert into sys_role_menu values (2, 117);
-insert into sys_role_menu values (2, 500);
-insert into sys_role_menu values (2, 501);
-insert into sys_role_menu values (2, 1000);
-insert into sys_role_menu values (2, 1001);
-insert into sys_role_menu values (2, 1002);
-insert into sys_role_menu values (2, 1003);
-insert into sys_role_menu values (2, 1004);
-insert into sys_role_menu values (2, 1005);
-insert into sys_role_menu values (2, 1006);
-insert into sys_role_menu values (2, 1007);
-insert into sys_role_menu values (2, 1008);
-insert into sys_role_menu values (2, 1009);
-insert into sys_role_menu values (2, 1010);
-insert into sys_role_menu values (2, 1011);
-insert into sys_role_menu values (2, 1012);
-insert into sys_role_menu values (2, 1013);
-insert into sys_role_menu values (2, 1014);
-insert into sys_role_menu values (2, 1015);
-insert into sys_role_menu values (2, 1016);
-insert into sys_role_menu values (2, 1017);
-insert into sys_role_menu values (2, 1018);
-insert into sys_role_menu values (2, 1019);
-insert into sys_role_menu values (2, 1020);
-insert into sys_role_menu values (2, 1021);
-insert into sys_role_menu values (2, 1022);
-insert into sys_role_menu values (2, 1023);
-insert into sys_role_menu values (2, 1024);
-insert into sys_role_menu values (2, 1025);
-insert into sys_role_menu values (2, 1026);
-insert into sys_role_menu values (2, 1027);
-insert into sys_role_menu values (2, 1028);
-insert into sys_role_menu values (2, 1029);
-insert into sys_role_menu values (2, 1030);
-insert into sys_role_menu values (2, 1031);
-insert into sys_role_menu values (2, 1032);
-insert into sys_role_menu values (2, 1033);
-insert into sys_role_menu values (2, 1034);
-insert into sys_role_menu values (2, 1035);
-insert into sys_role_menu values (2, 1036);
-insert into sys_role_menu values (2, 1037);
-insert into sys_role_menu values (2, 1038);
-insert into sys_role_menu values (2, 1039);
-insert into sys_role_menu values (2, 1040);
-insert into sys_role_menu values (2, 1041);
-insert into sys_role_menu values (2, 1042);
-insert into sys_role_menu values (2, 1043);
-insert into sys_role_menu values (2, 1044);
-insert into sys_role_menu values (2, 1045);
-insert into sys_role_menu values (2, 1046);
-insert into sys_role_menu values (2, 1047);
-insert into sys_role_menu values (2, 1048);
-insert into sys_role_menu values (2, 1049);
-insert into sys_role_menu values (2, 1050);
-insert into sys_role_menu values (2, 1051);
-insert into sys_role_menu values (2, 1052);
-insert into sys_role_menu values (2, 1053);
-insert into sys_role_menu values (2, 1054);
-insert into sys_role_menu values (2, 1055);
-insert into sys_role_menu values (2, 1056);
-insert into sys_role_menu values (2, 1057);
-insert into sys_role_menu values (2, 1058);
-insert into sys_role_menu values (2, 1059);
-insert into sys_role_menu values (2, 1060);
 
 -- ----------------------------
 -- 8、角色和小组关联表  角色1-N小组
@@ -474,13 +372,6 @@ create table sys_role_dept (
 comment on column sys_role_dept.role_id is '角色ID';
 comment on column sys_role_dept.dept_id is '小组ID';
 comment on table sys_role_dept is '角色和小组关联表';
-
--- ----------------------------
--- 初始化-角色和小组关联表数据
--- ----------------------------
-insert into sys_role_dept values (2, 100);
-insert into sys_role_dept values (2, 101);
-insert into sys_role_dept values (2, 105);
 
 -- ----------------------------
 -- 9、用户与职责关联表  用户1-N职责
@@ -499,7 +390,6 @@ comment on table sys_user_post is '用户与职责关联表';
 -- 初始化-用户与职责关联表数据
 -- ----------------------------
 insert into sys_user_post values (1, 1);
-insert into sys_user_post values (2, 2);
 
 -- ----------------------------
 -- 10、操作日志记录
@@ -776,12 +666,6 @@ comment on column sys_job.update_time is '更新时间';
 comment on column sys_job.remark is '备注信息';
 comment on table sys_job is '定时任务调度表';
 
--- ----------------------------
--- 初始化-定时任务调度表数据
--- ----------------------------
-insert into sys_job values(1, '系统默认（无参）', 'default', 'default', 'module_task.scheduler_test.job', null,   null, '0/10 * * * * ?', '3', '1', '1', 'admin', current_timestamp, '', null, '');
-insert into sys_job values(2, '系统默认（有参）', 'default', 'default', 'module_task.scheduler_test.job', 'test', null, '0/15 * * * * ?', '3', '1', '1', 'admin', current_timestamp, '', null, '');
-insert into sys_job values(3, '系统默认（多参）', 'default', 'default', 'module_task.scheduler_test.job', 'new',  '{test: 111}', '0/20 * * * * ?', '3', '1', '1', 'admin', current_timestamp, '', null, '');
 
 -- ----------------------------
 -- 16、定时任务调度日志表
@@ -845,12 +729,6 @@ comment on column sys_notice.update_by is '更新者';
 comment on column sys_notice.update_time is '更新时间';
 comment on column sys_notice.remark is '备注';
 comment on table sys_notice is '通知公告表';
-
--- ----------------------------
--- 初始化-公告信息表数据
--- ----------------------------
-insert into sys_notice values(1, '温馨提醒：2018-07-01 算法新版本发布啦', '2', '新版本内容', '0', 'admin', current_timestamp, '', null, '管理员');
-insert into sys_notice values(2, '维护通知：2018-07-01 算法系统凌晨维护', '1', '维护内容',   '0', 'admin', current_timestamp, '', null, '管理员');
 
 -- ----------------------------
 -- 18、代码生成业务表
