@@ -27,7 +27,6 @@ from module_algo.container.controller.container_controller import containerContr
 from module_algo.file.controller.file_controller import fileController
 from module_algo.task.controller.task_controller import taskController
 from sub_applications.handle import handle_sub_applications
-from utils.common_util import worship
 from utils.log_util import logger
 
 

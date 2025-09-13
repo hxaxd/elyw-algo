@@ -5,6 +5,8 @@ from exceptions.exception import ServiceException
 from module_admin.entity.vo.common_vo import CrudResponseModel
 from module_algo.file.dao.file_dao import FileDao
 from module_algo.file.entity.vo.file_vo import DeleteFileModel, FileModel, FilePageQueryModel
+from module_algo.file.entity.do.file_do import File
+
 from utils.common_util import CamelCaseUtil
 from utils.excel_util import ExcelUtil
 from fastapi import UploadFile
@@ -49,32 +51,24 @@ class FileService:
             upload_dir = Path(f"upload_file")
             upload_dir.mkdir(parents=True, exist_ok=True)
 
-            file_name = page_object.name
-            file_path = ""
+            file_path = None
             file_size = None
-            file_type = page_object.type
 
-            if file_type != "dir":
-                file_extension = os.path.splitext(file.filename)[1]
-                if file_type is None:
-                    file_type = file_extension
+            if page_object.type != "dir":
 
                 # 生成随机文件名
-                random_filename = f"{uuid.uuid4()}{file_extension}"
-
-                if file_name is None:
-                    file_name = file.filename
+                random_filename = f"{uuid.uuid4()}{os.path.splitext(file.filename)[1]}"
 
                 # 保存文件到指定目录
                 file_path = upload_dir / random_filename
                 with open(file_path, "wb") as f:
                     f.write(await file.read())
                 file_size = file.size
-            page_object.name = file_name
+            page_object.name = page_object.name if page_object.name is None else file.filename
             page_object.path = str(file_path)
             page_object.size = file_size
             page_object.upload_time = datetime.now()
-            page_object.type = file_type
+            page_object.type = page_object.type if page_object.type is None else os.path.splitext(file.filename)[1]
             
             await FileDao.add_file_dao(query_db, page_object)
             await query_db.commit()
@@ -233,7 +227,7 @@ class FileService:
             file = await FileDao.get_file_detail_by_id(query_db, id)
             if file is None:
                 raise ServiceException(message='文件不存在')
-            if file.type != 'zip':
+            if file.type != '.zip':
                 raise ServiceException(message='只能解压zip文件')
             if file.dept != dept_id:
                 raise ServiceException(message='您没有权限解压该文件')
@@ -248,7 +242,7 @@ class FileService:
                 dir_path = result_dir
 
                 # 创建目录记录
-                dir_record = FileModel(
+                dir_record = File(
                     name=name,
                     root=file.root,
                     type="dir",
@@ -264,24 +258,40 @@ class FileService:
                         return "dir"
                     suffix = filepath.suffix
                     if suffix:
-                        return suffix[1:].lower()
+                        return "." + suffix[1:].lower()
                     if os.access(filepath, os.X_OK):
                         return "executable"
                     return "unknown"
 
-                # 创建文件记录（如果需要记录单个文件）
-                for file_path in dir_path.rglob('*'):
-                    file_record = FileModel(
-                        name=file_path.name,
-                        path=str(file_path),
-                        root=dir_record.id,
-                        type=get_file_type(file_path),
-                        upload_time=datetime.now(),
-                        dept = dept_id,
-                        size=file_path.stat().st_size if file_path.is_file() else 0,
-                    )
-                    query_db.add(file_record)
-                await query_db.commit()
+
+
+                # 递归处理解压的文件和目录
+                async def process_directory(current_dir: Path, parent_id: int):
+                    """递归处理目录结构"""
+                    for item in current_dir.iterdir():
+                            
+                        item_type = get_file_type(item)
+                        
+                        # 创建文件/目录记录
+                        item_record = File(
+                            name=item.name,
+                            path=str(item) if item_type != "dir" else None,
+                            root=parent_id,  # 使用父级ID作为root
+                            type=item_type,
+                            upload_time=datetime.now(),
+                            dept=dept_id,
+                            size=item.stat().st_size if item.is_file() else None
+                        )
+                        query_db.add(item_record)
+                        await query_db.commit()
+                        await query_db.refresh(item_record)
+                        
+                        # 如果是目录，递归处理
+                        if item_record.type == "dir":
+                            await process_directory(item, item_record.id)
+                
+                # 开始处理解压的目录
+                await process_directory(result_dir, dir_record.id)
 
             return CrudResponseModel(is_success=True, message='解压成功')
 

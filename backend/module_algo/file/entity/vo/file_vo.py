@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from typing import Optional
 from module_admin.annotation.pydantic_annotation import as_query
+from fastapi import Form
 
 
 
@@ -22,7 +23,9 @@ class FileModel(BaseModel):
     upload_time: Optional[datetime] = Field(default=None, description='上传时间')
     dept: Optional[int] = Field(default=None, description='所属小组ID')
 
-
+    @classmethod
+    def as_form(cls, name: str|None = Form(...), type: str|None = Form(...), root: int = Form(...)):
+        return cls(name=name, path=None, type=type, size=None, root=root, dept=None)
 
 
 

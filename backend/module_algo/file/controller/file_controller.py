@@ -42,7 +42,7 @@ async def get_file_file_list(
 async def add_file_file(
     request: Request,
     file: UploadFile = Form(),
-    add_file: FileModel = Form(),
+    add_file: FileModel = Depends(FileModel.as_form),
     query_db: AsyncSession = Depends(get_db),
     current_user: CurrentUserModel = Depends(LoginService.get_current_user),
 ):
