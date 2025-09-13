@@ -32,3 +32,8 @@ out/
 *.tmp
 *.pyc
 
+# python
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
