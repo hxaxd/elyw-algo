@@ -93,7 +93,6 @@ async def query_detail_container_container(request: Request, id: int, query_db: 
     "/algorithm/create",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
-@Log(title='算法创建', business_type=BusinessType.INSERT)
 async def create_algorithm(
     file: UploadFile = Form(...),
     algo_name: str = Form(...),
@@ -111,11 +110,11 @@ async def create_algorithm(
 
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
-    if not container:
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -153,7 +152,6 @@ async def create_algorithm(
     "/algorithm/delete",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
-@Log(title='算法删除', business_type=BusinessType.DELETE)
 async def delete_algorithm(
     algo_name: str = Form(...),
     container_id: int = Form(...),
@@ -166,11 +164,11 @@ async def delete_algorithm(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
-    if not container:
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -198,7 +196,7 @@ async def delete_algorithm(
 
 
 @containerController.get(
-    "/running-tasks",
+    "/running-tasks/{container_id}",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
 async def get_running_tasks(
@@ -212,10 +210,11 @@ async def get_running_tasks(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -243,7 +242,7 @@ async def get_running_tasks(
 
 
 @containerController.get(
-    "/logs",
+    "/logs/{container_id}",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
 async def get_logs(
@@ -257,10 +256,11 @@ async def get_logs(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -284,7 +284,6 @@ async def get_logs(
     "/algorithm/update",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
-@Log(title='算法更新', business_type=BusinessType.UPDATE)
 async def update_algorithm(
     file: UploadFile = Form(...),
     algo_name: str = Form(...),
@@ -301,10 +300,11 @@ async def update_algorithm(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -352,10 +352,11 @@ async def list_algorithms(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -380,7 +381,6 @@ async def list_algorithms(
     "/model/create",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
-@Log(title='模型创建', business_type=BusinessType.INSERT)
 async def create_model(
     file: UploadFile = Form(...),
     model_name: str = Form(...),
@@ -395,10 +395,11 @@ async def create_model(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -433,7 +434,6 @@ async def create_model(
     "/model/delete",
     dependencies=[Depends(CheckUserInterfaceAuth('container:container:remove'))]
 )
-@Log(title='模型删除', business_type=BusinessType.DELETE)
 async def delete_model(
     model_name: str = Form(...),
     container_id: int = Form(...),
@@ -446,10 +446,11 @@ async def delete_model(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 
@@ -491,10 +492,11 @@ async def list_models(
     dept_id = current_user.user.dept_id
     # 获取容器信息
     container = await ContainerService.container_detail_services(query_db, container_id)
-    if container.dept != dept_id:
+    if not container:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
-    if not container:
+
+    if container.dept != dept_id:
         logger.warning(f'容器不存在: {container_id}')
         return ResponseUtil.failure(msg="容器不存在")
 

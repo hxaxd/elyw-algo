@@ -86,7 +86,7 @@ class FileService:
         :param page_object: 编辑文件对象
         :return: 编辑文件校验结果
         """
-        edit_file = page_object.model_dump(exclude_unset=True, exclude={'id', 'size', 'upload_time', 'dept', 'path'})
+        edit_file = page_object.model_dump(exclude_unset=True, exclude={'size', 'upload_time', 'dept', 'path'})
         file_info = await FileDao.get_file_detail_by_id(query_db, id=page_object.id)
         if file_info.id:
             try:
@@ -211,6 +211,23 @@ class FileService:
                 result = FileResponse(path=path, filename=file.name)
         else:
             result = None
+
+        return result
+
+    @classmethod
+    async def file_info_detail_services(cls, query_db: AsyncSession, id: int):
+        """
+        获取文件详细信息service
+
+        :param query_db: orm对象
+        :param id: 文件唯一标识
+        :return: 文件唯一标识对应的信息
+        """
+        file = await FileDao.get_file_detail_by_id(query_db, id=id)
+        if file:
+            result = FileModel(**CamelCaseUtil.transform_result(file))
+        else:
+            result = FileModel(**dict())
 
         return result
 

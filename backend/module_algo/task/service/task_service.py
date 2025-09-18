@@ -7,6 +7,7 @@ from module_algo.task.dao.task_dao import TaskDao
 from module_algo.task.entity.vo.task_vo import DeleteTaskModel, TaskModel, TaskPageQueryModel
 from utils.common_util import CamelCaseUtil
 from utils.excel_util import ExcelUtil
+from datetime import datetime
 
 
 class TaskService:
@@ -43,6 +44,7 @@ class TaskService:
         :return: 新增任务校验结果
         """
         try:
+            page_object.init_time = datetime.now()
             await TaskDao.add_task_dao(query_db, page_object)
             await query_db.commit()
             return CrudResponseModel(is_success=True, message='新增成功')
@@ -59,7 +61,7 @@ class TaskService:
         :param page_object: 编辑任务对象
         :return: 编辑任务校验结果
         """
-        edit_task = page_object.model_dump(exclude_unset=True, exclude={'state', 'init_time', 'end_time', 'dept', 'id', 'container', 'algo', 'result'})
+        edit_task = page_object.model_dump(exclude_unset=True, exclude={'state', 'init_time', 'end_time', 'dept', 'container', 'algo', 'result'})
         task_info = await cls.task_detail_services(query_db, page_object.id)
         if task_info.id and task_info.dept == page_object.dept:
             try:
