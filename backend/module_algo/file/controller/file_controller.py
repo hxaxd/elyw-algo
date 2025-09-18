@@ -106,3 +106,13 @@ async def unzip_file_file(
 
     return ResponseUtil.success(msg=unzip_file_result.message)
 
+
+
+@fileController.get(
+    '/{id}/info', response_model=FileModel, dependencies=[Depends(CheckUserInterfaceAuth('file:file:query'))]
+)
+async def query_detail_file_file(request: Request, id: int, query_db: AsyncSession = Depends(get_db)):
+    file_info_detail_result = await FileService.file_info_detail_services(query_db, id)
+    logger.info(f'获取id为{id}的文件成功')
+
+    return ResponseUtil.success(data=file_info_detail_result)

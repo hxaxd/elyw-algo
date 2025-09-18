@@ -7,6 +7,7 @@ from module_algo.container.dao.container_dao import ContainerDao
 from module_algo.container.entity.vo.container_vo import DeleteContainerModel, ContainerModel, ContainerPageQueryModel
 from utils.common_util import CamelCaseUtil
 from utils.excel_util import ExcelUtil
+from datetime import datetime
 
 
 class ContainerService:
@@ -44,6 +45,7 @@ class ContainerService:
         :return: 新增容器校验结果
         """
         try:
+            page_object.create_time = datetime.now()
             await ContainerDao.add_container_dao(query_db, page_object)
             await query_db.commit()
             return CrudResponseModel(is_success=True, message='新增成功')
@@ -60,7 +62,7 @@ class ContainerService:
         :param page_object: 编辑容器对象
         :return: 编辑容器校验结果
         """
-        edit_container = page_object.model_dump(exclude_unset=True, exclude={'create_time', 'dept', 'id'})
+        edit_container = page_object.model_dump(exclude_unset=True, exclude={'create_time', 'dept'})
         container_info = await cls.container_detail_services(query_db, page_object.id)
         if container_info.id:
             try:

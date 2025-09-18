@@ -16,7 +16,7 @@ class Task(Base):
     args = Column(String, nullable=False, comment='任务参数')
     remark = Column(String, nullable=True, comment='备注信息')
     state = Column(String, nullable=True, comment='任务状态')
-    result = Column(Integer, primary_key=True, nullable=False, comment='任务结果文件ID')
+    result = Column(Integer, nullable=True, comment='任务结果文件ID')
     init_time = Column(DateTime, nullable=True, comment='任务初始化时间')
     end_time = Column(DateTime, nullable=True, comment='任务结束时间')
     dept = Column(Integer, nullable=True, comment='所属部门ID')

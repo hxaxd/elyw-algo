@@ -70,7 +70,7 @@ class TaskDao:
         :param task: 任务对象
         :return:
         """
-        db_task = Task(**task.model_dump(exclude={'id', 'state', 'result', 'init_time', 'end_time'}))
+        db_task = Task(**task.model_dump(exclude={'id', 'state', 'result', 'end_time'}))
         db.add(db_task)
         await db.flush()
 

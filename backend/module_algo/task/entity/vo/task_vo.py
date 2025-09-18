@@ -26,29 +26,6 @@ class TaskModel(BaseModel):
     end_time: Optional[datetime] = Field(default=None, description='任务结束时间')
     dept: Optional[int] = Field(default=None, description='所属部门ID')
 
-    @NotBlank(field_name='name', message='任务名称不能为空')
-    def get_name(self):
-        return self.name
-
-    @NotBlank(field_name='container', message='执行容器ID不能为空')
-    def get_container(self):
-        return self.container
-
-    @NotBlank(field_name='algo', message='算法名称不能为空')
-    def get_algo(self):
-        return self.algo
-
-    @NotBlank(field_name='args', message='任务参数不能为空')
-    def get_args(self):
-        return self.args
-
-
-    def validate_fields(self):
-        self.get_name()
-        self.get_container()
-        self.get_algo()
-        self.get_args()
-
 
 
 

@@ -68,7 +68,7 @@ class ContainerDao:
         :param container: 容器对象
         :return:
         """
-        db_container = Container(**container.model_dump(exclude={'id', 'create_time'}))
+        db_container = Container(**container.model_dump(exclude={'id'}))
         db.add(db_container)
         await db.flush()
 
