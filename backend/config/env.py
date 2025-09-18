@@ -40,12 +40,12 @@ class DataBaseSettings(BaseSettings):
     数据库配置
     """
 
-    db_type: Literal['mysql', 'postgresql'] = 'mysql'
+    db_type: str = 'postgresql'
     db_host: str = '127.0.0.1'
-    db_port: int = 3306
-    db_username: str = 'root'
-    db_password: str = 'mysqlroot'
-    db_database: str = 'elyw-algo'
+    db_port: int = 5432
+    db_username: str = 'elyw'
+    db_password: str = 'elyw1234'
+    db_database: str = 'elyw_algo'
     db_echo: bool = True
     db_max_overflow: int = 10
     db_pool_size: int = 50

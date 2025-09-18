@@ -11,7 +11,7 @@ class Task(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False, comment='任务唯一标识')
     name = Column(String, nullable=False, comment='任务名称')
-    container = Column(Integer, primary_key=True, nullable=False, comment='执行容器ID')
+    container = Column(Integer, nullable=False, comment='执行容器ID')
     algo = Column(String, nullable=False, comment='算法名称')
     args = Column(String, nullable=False, comment='任务参数')
     remark = Column(String, nullable=True, comment='备注信息')

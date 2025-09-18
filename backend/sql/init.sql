@@ -123,7 +123,7 @@ comment on table sys_post is '职责信息表';
 -- ----------------------------
 -- 初始化-职责信息表数据
 -- ----------------------------
-insert into sys_post values(1, 'ceo',  '负责人',    1, '0', 'admin', current_timestamp, '', null, '');
+insert into sys_post values(1, 'ld',  '负责人',    1, '0', 'admin', current_timestamp, '', null, '');
 
 -- ----------------------------
 -- 初始化-用户信息表数据
@@ -227,9 +227,32 @@ comment on table sys_menu is '菜单权限表';
 -- 初始化-菜单信息表数据
 -- ----------------------------
 -- 一级菜单
-insert into sys_menu values(1, '系统管理', 0, '1', 'system',           null, '', '', 1, 0, 'M', '0', '0', '', 'system',   'admin', current_timestamp, '', null, '系统管理目录');
-insert into sys_menu values(2, '系统监控', 0, '2', 'monitor',          null, '', '', 1, 0, 'M', '0', '0', '', 'monitor',  'admin', current_timestamp, '', null, '系统监控目录');
-insert into sys_menu values(3, '系统工具', 0, '3', 'tool',             null, '', '', 1, 0, 'M', '0', '0', '', 'tool',     'admin', current_timestamp, '', null, '系统工具目录');
+insert into sys_menu values(1, '系统管理', 0, '4', 'system',           null, '', '', 1, 0, 'M', '0', '0', '', 'system',   'admin', current_timestamp, '', null, '系统管理目录');
+insert into sys_menu values(2, '系统监控', 0, '5', 'monitor',          null, '', '', 1, 0, 'M', '0', '0', '', 'monitor',  'admin', current_timestamp, '', null, '系统监控目录');
+insert into sys_menu values(3, '系统工具', 0, '6', 'tool',             null, '', '', 1, 0, 'M', '0', '0', '', 'tool',     'admin', current_timestamp, '', null, '系统工具目录');
+insert into sys_menu values(4, '文件管理', 0, '1', 'file', 'file/file/index', '', '', 1, 0, 'C', '0', '0', 'file:file:list', 'documentation', 'admin', current_timestamp, '', null, '文件菜单');
+insert into sys_menu values(5, '容器管理', 0, '2', 'container', 'container/container/index', '', '', 1, 0, 'C', '0', '0', 'container:container:list', 'server', 'admin', current_timestamp, '', null, '容器菜单');
+insert into sys_menu values(6, '任务管理', 0, '3', 'task', 'task/task/index', '', '', 1, 0, 'C', '0', '0', 'task:task:list', 'list', 'admin', current_timestamp, '', null, '任务菜单');
+
+insert into sys_menu values(118, '文件查询', 4, '1',  '', '', '', '', 1, 0, 'F', '0', '0', 'file:file:query',        '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(119, '文件新增', 4, '2',  '', '', '', '', 1, 0, 'F', '0', '0', 'file:file:add',          '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(120, '文件修改', 4, '3',  '', '', '', '', 1, 0, 'F', '0', '0', 'file:file:edit',         '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(121, '文件删除', 4, '4',  '', '', '', '', 1, 0, 'F', '0', '0', 'file:file:remove',       '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(122, '文件导出', 4, '5',  '', '', '', '', 1, 0, 'F', '0', '0', 'file:file:export',       '#', 'admin', current_timestamp, '', null, '');
+
+insert into sys_menu values(124, '容器查询', 5, '1',  '', '', '', '', 1, 0, 'F', '0', '0', 'container:container:query',        '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(125, '容器新增', 5, '2',  '', '', '', '', 1, 0, 'F', '0', '0', 'container:container:add',          '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(126, '容器修改', 5, '3',  '', '', '', '', 1, 0, 'F', '0', '0', 'container:container:edit',         '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(127, '容器删除', 5, '4',  '', '', '', '', 1, 0, 'F', '0', '0', 'container:container:remove',       '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(128, '容器导出', 5, '5',  '', '', '', '', 1, 0, 'F', '0', '0', 'container:container:export',       '#', 'admin', current_timestamp, '', null, '');
+
+insert into sys_menu values(130, '任务查询', 6, '1',  '', '', '', '', 1, 0, 'F', '0', '0', 'task:task:query',        '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(131, '任务新增', 6, '2',  '', '', '', '', 1, 0, 'F', '0', '0', 'task:task:add',          '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(132, '任务修改', 6, '3',  '', '', '', '', 1, 0, 'F', '0', '0', 'task:task:edit',         '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(133, '任务删除', 6, '4',  '', '', '', '', 1, 0, 'F', '0', '0', 'task:task:remove',       '#', 'admin', current_timestamp, '', null, '');
+insert into sys_menu values(134, '任务导出', 6, '5',  '', '', '', '', 1, 0, 'F', '0', '0', 'task:task:export',       '#', 'admin', current_timestamp, '', null, '');
+
+
 -- 二级菜单
 insert into sys_menu values(100,  '用户管理', 1,   '1', 'user',       'system/user/index',        '', '', 1, 0, 'C', '0', '0', 'system:user:list',        'user',          'admin', current_timestamp, '', null, '用户管理菜单');
 insert into sys_menu values(101,  '角色管理', 1,   '2', 'role',       'system/role/index',        '', '', 1, 0, 'C', '0', '0', 'system:role:list',        'peoples',       'admin', current_timestamp, '', null, '角色管理菜单');
@@ -242,7 +265,6 @@ insert into sys_menu values(107,  '通知公告', 1,   '8', 'notice',     'syste
 insert into sys_menu values(108,  '日志管理', 1,   '9', 'log',        '',                         '', '', 1, 0, 'M', '0', '0', '',                        'log',           'admin', current_timestamp, '', null, '日志管理菜单');
 insert into sys_menu values(109,  '在线用户', 2,   '1', 'online',     'monitor/online/index',     '', '', 1, 0, 'C', '0', '0', 'monitor:online:list',     'online',        'admin', current_timestamp, '', null, '在线用户菜单');
 insert into sys_menu values(110,  '定时任务', 2,   '2', 'job',        'monitor/job/index',        '', '', 1, 0, 'C', '0', '0', 'monitor:job:list',        'job',           'admin', current_timestamp, '', null, '定时任务菜单');
-insert into sys_menu values(111,  '数据监控', 2,   '3', 'druid',      'monitor/druid/index',      '', '', 1, 0, 'C', '0', '0', 'monitor:druid:list',      'druid',         'admin', current_timestamp, '', null, '数据监控菜单');
 insert into sys_menu values(112,  '服务监控', 2,   '4', 'server',     'monitor/server/index',     '', '', 1, 0, 'C', '0', '0', 'monitor:server:list',     'server',        'admin', current_timestamp, '', null, '服务监控菜单');
 insert into sys_menu values(113,  '缓存监控', 2,   '5', 'cache',      'monitor/cache/index',      '', '', 1, 0, 'C', '0', '0', 'monitor:cache:list',      'redis',         'admin', current_timestamp, '', null, '缓存监控菜单');
 insert into sys_menu values(114,  '缓存列表', 2,   '6', 'cacheList',  'monitor/cache/list',       '', '', 1, 0, 'C', '0', '0', 'monitor:cache:list',      'redis-list',    'admin', current_timestamp, '', null, '缓存列表菜单');
@@ -590,7 +612,7 @@ comment on table sys_config is '参数配置表';
 insert into sys_config values(1, '主框架页-默认皮肤样式名称',     'sys.index.skinName',            'skin-blue',     'Y', 'admin', current_timestamp, '', null, '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow' );
 insert into sys_config values(2, '用户管理-账号初始密码',         'sys.user.initPassword',         '123456',        'Y', 'admin', current_timestamp, '', null, '初始化密码 123456' );
 insert into sys_config values(3, '主框架页-侧边栏主题',           'sys.index.sideTheme',           'theme-dark',    'Y', 'admin', current_timestamp, '', null, '深色主题theme-dark，浅色主题theme-light' );
-insert into sys_config values(4, '账号自助-验证码开关',           'sys.account.captchaEnabled',    'true',          'Y', 'admin', current_timestamp, '', null, '是否开启验证码功能（true开启，false关闭）');
+insert into sys_config values(4, '账号自助-验证码开关',           'sys.account.captchaEnabled',    'false',          'Y', 'admin', current_timestamp, '', null, '是否开启验证码功能（true开启，false关闭）');
 insert into sys_config values(5, '账号自助-是否开启用户注册功能', 'sys.account.registerUser',      'false',         'Y', 'admin', current_timestamp, '', null, '是否开启注册用户功能（true开启，false关闭）');
 insert into sys_config values(6, '用户登录-黑名单列表',           'sys.login.blackIPList',         '',              'Y', 'admin', current_timestamp, '', null, '设置登录IP黑名单限制，多个匹配项以;分隔，支持匹配（*通配、网段）');
 
@@ -835,6 +857,87 @@ comment on column gen_table_column.create_time is '创建时间';
 comment on column gen_table_column.update_by is '更新者';
 comment on column gen_table_column.update_time is '更新时间';
 comment on table gen_table_column is '代码生成业务表字段';
+
+-- ----------------------------
+-- 20、容器表
+-- ----------------------------
+drop table if exists container;
+create table container (
+    id serial not null,
+    name varchar not null,
+    url varchar not null,
+    type varchar null,
+    create_time timestamp(0) null,
+    dept int null,
+    primary key (id)
+);
+alter sequence container_id_seq restart 20;
+comment on column container.id is '容器唯一标识';
+comment on column container.name is '容器名称';
+comment on column container.url is '容器URL';
+comment on column container.type is '容器类型';
+comment on column container.create_time is '创建时间';
+comment on column container.dept is '所属部门ID';
+comment on table container is '容器表';
+
+-- ----------------------------
+-- 21、文件表
+-- ----------------------------
+drop table if exists file;
+create table file (
+    id serial not null,
+    name varchar null,
+    path varchar null,
+    type varchar null,
+    size float null,
+    root int not null,
+    upload_time timestamp(0) null,
+    dept int null,
+    primary key (id)
+);
+alter sequence file_id_seq restart 20;
+comment on column file.id is '文件唯一标识';
+comment on column file.name is '文件名';
+comment on column file.path is '文件路径';
+comment on column file.type is '文件类型';
+comment on column file.size is '文件大小';
+comment on column file.root is '父文件ID, 用于文件夹结构';
+comment on column file.upload_time is '上传时间';
+comment on column file.dept is '所属小组ID';
+comment on table file is '文件表';
+
+-- ----------------------------
+-- 22、任务表
+-- ----------------------------
+drop table if exists task;
+create table task (
+    id serial not null,
+    name varchar not null,
+    container int not null,
+    algo varchar not null,
+    args varchar not null,
+    remark varchar null,
+    state varchar null,
+    result int not null,
+    init_time timestamp(0) null,
+    end_time timestamp(0) null,
+    dept int null,
+    primary key (id)
+);
+alter sequence task_id_seq restart 20;
+comment on column task.id is '任务唯一标识';
+comment on column task.name is '任务名称';
+comment on column task.container is '执行容器ID';
+comment on column task.algo is '算法名称';
+comment on column task.args is '任务参数';
+comment on column task.remark is '备注信息';
+comment on column task.state is '任务状态';
+comment on column task.result is '任务结果文件ID';
+comment on column task.init_time is '任务初始化时间';
+comment on column task.end_time is '任务结束时间';
+comment on column task.dept is '所属部门ID';
+comment on table task is '任务表';
+
 
 CREATE OR REPLACE FUNCTION "find_in_set"(int8, varchar)
     RETURNS "pg_catalog"."bool" AS $BODY$
