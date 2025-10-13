@@ -64,11 +64,11 @@ class FileService:
                 with open(file_path, "wb") as f:
                     f.write(await file.read())
                 file_size = file.size
-            page_object.name = page_object.name if page_object.name is None else file.filename
+            page_object.name = file.filename if page_object.name is None else page_object.name
             page_object.path = str(file_path)
             page_object.size = file_size
             page_object.upload_time = datetime.now()
-            page_object.type = page_object.type if page_object.type is None else os.path.splitext(file.filename)[1]
+            page_object.type = os.path.splitext(file.filename)[1] if page_object.type is None else page_object.type
             
             await FileDao.add_file_dao(query_db, page_object)
             await query_db.commit()
