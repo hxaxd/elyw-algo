@@ -48,7 +48,7 @@ class FileDao:
                 await db.execute(
                     select(File)
                     .where(
-                        File.root == id
+                        File.root == root
                     )
                 )
             )
