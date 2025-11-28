@@ -8,7 +8,23 @@ export function listTask(query) {
     params: query
   })
 }
+// 执行任务
+export function executeTask(taskId) {
+  return request({
+    url: '/task/task/process',
+    method: 'post',
+    params: {
+      task_id: taskId
+    }
+  })
+}
 
+export function getRunningTasks(containerId) {
+  return request({
+    url: '/container/container/running-tasks/' + containerId,
+    method: 'get'
+  })
+}
 // 查询任务详细
 export function getTask(id) {
   return request({
@@ -42,3 +58,4 @@ export function delTask(id) {
     method: 'delete'
   })
 }
+

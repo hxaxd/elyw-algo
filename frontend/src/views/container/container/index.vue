@@ -56,13 +56,6 @@
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="Download"
-          @click="handleExport"
-          v-hasPermi="['container:container:export']"
-        >导出</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -80,11 +73,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
+          <el-button link type="primary" icon="View" @click="handleView(scope.row)">查看</el-button>
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['container:container:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['container:container:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    
 
     <pagination
       v-show="total>0"
@@ -106,7 +101,6 @@
       <el-form-item v-if="renderField(true, true)" label="容器类型" prop="type">
         <el-input v-model="form.type" placeholder="请输入容器类型" />
       </el-form-item>
-
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -115,16 +109,27 @@
         </div>
       </template>
     </el-dialog>
-  </div>
+
+     <!-- 查看容器模型与算法对话框 -->
+    <el-dialog title="模型与算法管理" v-model="viewOpen"width="800px">
+        <AlgorithmManagement :container-id="currentContainerId" />
+        <ModelManagement :container-id="currentContainerId"/>
+    </el-dialog>
+    </div>
+
+ 
 </template>
 
 <script setup name="Container">
-import { listContainer, getContainer, delContainer, addContainer, updateContainer } from "@/api/container/container";
+import { listContainer, getContainer, delContainer, addContainer, updateContainer, } from "@/api/container/container";
+import AlgorithmManagement from './AlgorithmManagement.vue'
+import ModelManagement from './ModelManagement.vue'
 
 const { proxy } = getCurrentInstance();
 
 const containerList = ref([]);
 const open = ref(false);
+const open2 = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -132,7 +137,9 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-
+const viewOpen = ref(false);
+const modelData = ref([]); 
+const currentContainerId = ref(null);
 const data = reactive({
   form: {},
   queryParams: {
@@ -140,6 +147,7 @@ const data = reactive({
     pageSize: 10,
     name: null,
     type: null,
+
   },
   rules: {
     name: [
@@ -153,11 +161,17 @@ const data = reactive({
 
 const { queryParams, form, rules } = toRefs(data);
 
+ function handleView(row) {
+      currentContainerId.value = row.id; 
+      viewOpen.value = true;
+    }
+
 /** 查询容器列表 */
 function getList() {
   loading.value = true;
   listContainer(queryParams.value).then(response => {
     containerList.value = response.rows;
+    modelData.value=response.rows;
     total.value = response.total;
     loading.value = false;
   });
@@ -166,6 +180,7 @@ function getList() {
 /** 取消按钮 */
 function cancel() {
   open.value = false;
+  open2.value=false;
   reset();
 }
 
@@ -252,13 +267,6 @@ function handleDelete(row) {
 }
 
 
-/** 导出按钮操作 */
-function handleExport() {
-  proxy.download('container/container/export', {
-    ...queryParams.value
-  }, `container_${new Date().getTime()}.xlsx`);
-}
-
 /** 是否渲染字段 */
 function renderField(insert, edit) {
   return form.value.id == null ? insert : edit;
@@ -266,3 +274,12 @@ function renderField(insert, edit) {
 
 getList();
 </script>
+<style>
+.management-container {
+  display: flex;
+  justify-content: space-between;
+  min-height: 25vh;
+  padding: 20px;
+  gap: 20px;
+}
+</style>
