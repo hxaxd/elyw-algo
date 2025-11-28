@@ -10,7 +10,7 @@ export function listData(query) {
 }
 
 // 查询字典数据详细
-export function getData(dictCode) {
+export function getDate(dictCode) {
   return request({
     url: '/system/dict/data/' + dictCode,
     method: 'get'

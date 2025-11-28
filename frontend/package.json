@@ -1,11 +1,14 @@
 {
-  "name": "elyw-algo",
+  "name": "algo",
   "version": "1.6.2",
-  "description": "算法管理系统",
+  "description": "输电线路缺陷智能检测系统",
+  "author": "insistence",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build:prod": "vite build",
+    "build:stage": "vite build --mode staging",
     "preview": "vite preview"
   },
   "repository": {
@@ -28,7 +31,9 @@
     "js-beautify": "1.15.1",
     "js-cookie": "3.0.5",
     "jsencrypt": "3.3.2",
+    "leaflet": "^1.9.4",
     "nprogress": "0.2.0",
+    "ol": "^8.2.0",
     "pinia": "2.1.7",
     "splitpanes": "3.1.5",
     "vue": "3.4.15",

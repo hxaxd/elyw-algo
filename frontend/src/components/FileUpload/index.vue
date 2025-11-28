@@ -1,10 +1,11 @@
 <template>
   <div class="upload-file">
+    <el-dialog :model-value="showUpload" draggable :before-close="handleCancel" title="添加文件" width="30%"></el-dialog>
     <el-upload
       multiple
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
-      :file-list="fileList"
+     :file-list="fileList"
       :limit="limit"
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
@@ -14,9 +15,10 @@
       class="upload-file-uploader"
       ref="fileUpload"
       v-if="!disabled"
+    
     >
       <!-- 上传按钮 -->
-      <el-button type="primary">选取文件</el-button>
+      <el-button type="file" >选取文件</el-button>
     </el-upload>
     <!-- 上传提示 -->
     <div class="el-upload__tip" v-if="showTip && !disabled">
@@ -68,20 +70,41 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
-  }
+  },
+  UploadFile:{
+    type:Boolean
+  },
+   customUpload: {
+        type: Boolean,
+        default: false
+      }
 });
 
 const { proxy } = getCurrentInstance();
-const emit = defineEmits();
+const emit = defineEmits(['update:modelValue', 'custom-upload']);
+
 const number = ref(0);
 const uploadList = ref([]);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
-const uploadFileUrl = ref(import.meta.env.VITE_APP_BASE_API + "/common/upload"); // 上传文件服务器地址
+const uploadFileUrl = ref(import.meta.env.VITE_APP_BASE_API + "/file/file"); // 上传文件服务器地址
 const headers = ref({ Authorization: "Bearer " + getToken() });
 const fileList = ref([]);
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
+
+defineExpose({
+  fileList
+});
+ const handleCustomUpload = (params) => {
+      const file = params.file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const binaryStr = e.target.result;
+        emit('custom-upload', binaryStr, file);
+      };
+      reader.readAsBinaryString(file);
+    };
 
 watch(() => props.modelValue, val => {
   if (val) {
@@ -101,6 +124,12 @@ watch(() => props.modelValue, val => {
     return [];
   }
 },{ deep: true, immediate: true });
+
+// 取消
+const handleCancel = () => {
+  emit('update:showUpload', false)
+}
+
 
 // 上传前校检格式和大小
 function handleBeforeUpload(file) {

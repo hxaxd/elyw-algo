@@ -18,11 +18,14 @@ export function getFile(id) {
 }
 
 // 新增文件
-export function addFile(data) {
+export function addFileFile(data) {
   return request({
     url: '/file/file',
     method: 'post',
-    data: data
+    data: data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 
@@ -40,5 +43,21 @@ export function delFile(id) {
   return request({
     url: '/file/file/' + id,
     method: 'delete'
+  })
+}
+
+export function UpzipFile(){
+  return request({
+    url:'/file/file/unzip',
+    method:'post'
+  })
+}
+
+export function down(id) {
+  return request({
+    url: 'file/file/' + id,
+    method: 'get',
+    responseType: 'blob', 
+    timeout: 30000 
   })
 }

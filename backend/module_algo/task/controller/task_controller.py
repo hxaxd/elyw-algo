@@ -212,14 +212,14 @@ async def process_invocation(
     zip_buffer.seek(0)
 
     try:
-        # 发送压缩文件请求
+        # 发送压缩文件请求，设置超时时间为 60 秒
         response = await client.post(
             f'{url}/process',
             files={"file": ("input_files.zip", zip_buffer, "application/zip")},
-            data={"task_id": str(task_id), "algo_name": algo, "args_json": json.dumps(args)}
+            data={"task_id": str(task_id), "algo_name": algo, "args_json": json.dumps(args)},
+            timeout=86400
         )
         response.raise_for_status()
-
         # 创建结果目录
         result_dir = Path("./upload_file/results") / str(uuid.uuid4())
         result_dir.mkdir(parents=True, exist_ok=True)
@@ -274,76 +274,63 @@ async def background_processor(task_id: int, dept_id: int, args: List[Dict[str, 
     - task_id: 任务ID
     - args: 参数列表
     """
-    # 将 AsyncSessionLocal() 实例化放在 try 块外面，以便在 except 块中也能访问
     db_session_instance = AsyncSessionLocal()
-    task = None # 初始化 task 变量，以便在 finally 块中能够访问
+    task = None
     try:
-        async with db_session_instance as db: # 在这里使用这个实例
+        async with db_session_instance as db:
             task = await db.get(Task, task_id)
 
             if not task or task.dept != dept_id:
                 logger.warning(f'任务不存在或无权访问: {task_id}')
-                # 如果是直接返回，数据库会话不会被 commit，而是被 async with 块隐式回滚
                 return ResponseUtil.failure(msg="任务不存在或无权访问")
 
             if task.state == 'running':
                 logger.info(f'Task {task_id} is already running. Skipping.')
-                return # 任务已在运行中，直接返回
+                return
 
             task.state = 'running'
-            await db.flush() # flush() 写入数据库但不提交，以便后续操作在同一事务中
-            await db.refresh(task) # 刷新 task 对象以确保其在会话中是最新状态
+            await db.flush()
+            await db.commit()
+            await db.refresh(task)
 
-            # 使用异步事务
             dir_record = File(
-                    name=str(task.name), # 访问 task.name 此时是安全的
+                    name=str(task.name),
                     root=1,
                     type="dir",
                     upload_time=datetime.now(),
                     dept = dept_id
                 )
             db.add(dir_record)
-            await db.flush() # flush() 写入数据库但不提交，以便获取 dir_record.id
-            await db.refresh(dir_record) # 刷新以获取自动生成的 ID
+            await db.flush()
+            await db.refresh(dir_record)
 
             i = 0
-            # 使用异步HTTP客户端（保持连接池复用）
             async with httpx.AsyncClient() as client:
-                for arg_item in args: # 使用更清晰的变量名 arg_item
+                for arg_item in args:
                     i = i+1
-                    # 确保 arg_item 是字典（防止 TypeError: 'str' object does not support item assignment）
+
                     if isinstance(arg_item, dict):
-                        # arg_item 是通过 JSON.loads 获得，需要复制来避免修改原始数据
-                        # 如果 arg_item 自身没有被其他地方引用，直接修改可能也可以，但复制更安全
+  
                         current_arg = arg_item.copy() 
                         current_arg['task_id'] = task_id
-                        # 调用 process_invocation，传递同一个 db 会话
                         file_id = await process_invocation(db, client, dir_record.id, f"{task.name}---{i}", current_arg, dept_id)
-                        # 这里可以根据 process_invocation 的返回值做进一步处理，例如记录 file_id
                     else:
                         logger.error(f"任务 {task_id} 的参数列表包含非字典项：类型 {type(arg_item)}, 值 {arg_item}。跳过此项。")
-                        # 可以选择抛出异常或仅记录错误继续
 
 
             # 任务完成后，更新任务状态
             task.state = 'success'
             task.end_time = datetime.now()
-            task.result = dir_record.id # 假设 dir_record.id 是你期望的最终结果
-            await db.commit() # 最终提交所有在 background_processor 和 process_invocation 中进行的更改
-            await db.refresh(task) # 刷新任务对象以反映提交后的最新状态
+            task.result = dir_record.id
+            await db.commit()
+            await db.refresh(task)
 
     except Exception as e:
         logger.error(f"后台任务 {task_id} 处理失败: {e}", exc_info=True) # 打印详细异常信息
         try:
-            # 无论任务是否成功加载，都尝试回滚会话中的所有待处理更改
-            if db_session_instance and db_session_instance.is_active: # 检查会话是否仍然活跃
-                 await db_session_instance.rollback() # 回滚整个事务
-
-            # 只有当 task 对象实际被加载时才尝试更新其状态
+            if db_session_instance and db_session_instance.is_active:
+                 await db_session_instance.rollback()
             if task:
-                # 重新获取 task 对象，因为它可能在 rollback 后过期/分离
-                # 或者如果它是同一个 db_session_instance，它可能保持连接
-                # 这里为了简单，我们假设 task 还在当前的 db_session_instance 作用域内
                 task.state = 'failed'
                 await db_session_instance.commit() # 提交失败状态
                 await db_session_instance.refresh(task) # 刷新 task 对象
@@ -352,12 +339,10 @@ async def background_processor(task_id: int, dept_id: int, args: List[Dict[str, 
 
         except Exception as rollback_e:
             logger.error(f"任务 {task_id} 失败后，尝试回滚或更新状态时发生二次异常: {rollback_e}", exc_info=True)
-        
-        # 重新抛出原始异常，让 ASGI 应用程序或更上层的处理器来处理
+
         raise e
     finally:
-        # async with 语句块会自动关闭会话，所以这里通常不需要额外关闭
-        # 但如果 db_session_instance 在某些复杂情况下被显式创建而没有正确关闭，可以考虑加 db_session_instance.close()
+
         pass
 
 
