@@ -1,7 +1,7 @@
 {
   "name": "algo",
   "version": "1.6.2",
-  "description": "输电线路缺陷智能检测系统",
+  "description": "elyw-algo",
   "author": "insistence",
   "license": "MIT",
   "type": "module",

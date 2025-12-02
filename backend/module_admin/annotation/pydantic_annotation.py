@@ -17,7 +17,18 @@ def as_query(cls: Type[BaseModelVar]) -> Type[BaseModelVar]:
     for field_name, model_field in cls.model_fields.items():
         model_field: FieldInfo  # type: ignore
 
-        if not model_field.is_required():
+        # 检查是否有default_factory
+        if hasattr(model_field, 'default_factory') and model_field.default_factory is not None:
+            # 对于有default_factory的字段，不设置默认值，让Pydantic在实例化时处理
+            new_parameters.append(
+                inspect.Parameter(
+                    model_field.alias,
+                    inspect.Parameter.POSITIONAL_ONLY,
+                    default=Query(None, description=model_field.description),
+                    annotation=model_field.annotation,
+                )
+            )
+        elif not model_field.is_required():
             new_parameters.append(
                 inspect.Parameter(
                     model_field.alias,

@@ -26,6 +26,7 @@ from module_generator.controller.gen_controller import genController
 from module_algo.container.controller.container_controller import containerController
 from module_algo.file.controller.file_controller import fileController
 from module_algo.task.controller.task_controller import taskController
+from module_algo.statistics.controller.statistics_controller import statisticsController
 from sub_applications.handle import handle_sub_applications
 from utils.log_util import logger
 
@@ -83,6 +84,7 @@ controller_list = [
     {'router': containerController, 'tags': ['容器管理']},
     {'router': fileController, 'tags': ['文件管理']},
     {'router': taskController, 'tags': ['任务管理']},
+    {'router': statisticsController, 'tags': ['统计管理']},
 ]
 
 for controller in controller_list:

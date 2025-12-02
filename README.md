@@ -45,7 +45,7 @@ docker save elyw-algo -o elyw-algo.tar
 
 docker load -i elyw-algo.tar
 
-docker run -p 9099:9099 -v $(pwd)/backend:/app elyw-algo
+docker run -d -p 9099:9099 -v $(pwd)/backend:/app elyw-algo
 ```
 
 ## 前端
