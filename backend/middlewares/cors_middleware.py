@@ -13,8 +13,6 @@ def add_cors_middleware(app: FastAPI):
     origins = [
         'http://localhost:80',
         'http://127.0.0.1:80',
-        'http://www.elyw.com',
-        'https://www.elyw.com',
         'http://10.43.12.149',
         'https://10.43.12.149'
     ]

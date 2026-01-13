@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">elyw-algo</h3>
+      <h3 class="title">输电线路缺陷智能检测系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -169,7 +169,7 @@ getCookie();
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("https://gd-hbimg-edge.huaban.com/516549eb46ac2c6936a030fb31535a69e3a2318765a197-40khkj_fw1200webp?auth_key=1768305600-6c35bf8ae64c48a78e17bbd92dc59ad7-0-e49f6dbc06ab0d83139710dd225282c4");
   background-size: cover;
 }
 .title {

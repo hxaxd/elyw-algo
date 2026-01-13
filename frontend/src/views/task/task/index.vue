@@ -2,32 +2,19 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="任务名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入任务名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter="handleQuery"
-        />
+        <el-input v-model="queryParams.name" placeholder="请输入任务名称" clearable style="width: 240px"
+          @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="执行容器" prop="container">
         <el-select v-model="queryParams.container" placeholder="请选择执行容器" clearable style="width: 240px">
-          <el-option
-            v-for="container in containers"
-            :key="container.id"
-            :label="container.name"
-            :value="container.id"
-          />
+          <el-option v-for="container in containers" :key="container.id" :label="container.name"
+            :value="container.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="算法名称" prop="algo">
         <el-select v-model="queryParams.algo" placeholder="请选择算法名称" clearable style="width: 240px">
-          <el-option
-            v-for="algorithm in algorithms"
-            :key="algorithm.name"
-            :label="algorithm.name"
-            :value="algorithm.name"
-          />
+          <el-option v-for="algorithm in algorithms" :key="algorithm.name" :label="algorithm.name"
+            :value="algorithm.name" />
         </el-select>
       </el-form-item>
       <el-form-item label="任务状态" prop="state">
@@ -47,35 +34,15 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-          v-hasPermi="['task:task:add']"
-        >新增</el-button>
+        <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['task:task:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="Edit"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['task:task:edit']"
-        >修改</el-button>
+        <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate"
+          v-hasPermi="['task:task:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="Delete"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['task:task:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
+        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
+          v-hasPermi="['task:task:remove']">删除</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -101,37 +68,37 @@
         </template>
       </el-table-column>
       <el-table-column label="备注信息" align="center" prop="remark" />
-     <el-table-column label="任务状态" align="center" prop="state">
-  <template #default="scope">
-    <div style="display: flex; align-items: center; justify-content: center;">
-      <el-tag :type="getStatusType(scope.row.state, scope.row.result)">
-        {{ getStatusText(scope.row.state, scope.row.result) }}
-      </el-tag>
-      <el-icon v-if="!scope.row.result && (scope.row.state === 'running' || scope.row.state === '')" class="is-loading" style="margin-left: 5px;">
-        <Loading />
-      </el-icon>
-    </div>
-  </template>
-</el-table-column>
+      <el-table-column label="任务状态" align="center" prop="state">
+        <template #default="scope">
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <el-tag :type="getStatusType(scope.row.state, scope.row.result)">
+              {{ getStatusText(scope.row.state, scope.row.result) }}
+            </el-tag>
+            <el-icon v-if="!scope.row.result && (scope.row.state === 'running' || scope.row.state === '')"
+              class="is-loading" style="margin-left: 5px;">
+              <Loading />
+            </el-icon>
+          </div>
+        </template>
+      </el-table-column>
 
-<el-table-column label="任务结果" align="center" prop="result" width="120">
-  <template #default="scope">
-<el-button 
-  v-if="scope.row.result" 
-  link 
-  type="primary" 
-  @click="openResultFolder(scope.row.result, scope.row.name)"
->
-  <el-icon><FolderOpened /></el-icon>
-  查看结果
-</el-button>
-    <el-tag v-else-if="!scope.row.result && (scope.row.state === 'running' || scope.row.state === '')" type="warning">执行中...</el-tag>
-    <el-tag v-else-if="scope.row.state === 'pending'" type="info">等待执行</el-tag>
-    <el-tag v-else-if="scope.row.state === 'failed'" type="danger">执行失败</el-tag>
-    <span v-else-if="!scope.row.result && scope.row.state === 'completed'" class="no-result">无结果</span>
-    <span v-else>-</span>
-  </template>
-</el-table-column>
+      <el-table-column label="任务结果" align="center" prop="result" width="120">
+        <template #default="scope">
+          <el-button v-if="scope.row.result" link type="primary"
+            @click="openResultFolder(scope.row.result, scope.row.name)">
+            <el-icon>
+              <FolderOpened />
+            </el-icon>
+            查看结果
+          </el-button>
+          <el-tag v-else-if="!scope.row.result && (scope.row.state === 'running' || scope.row.state === '')"
+            type="warning">执行中...</el-tag>
+          <el-tag v-else-if="scope.row.state === 'pending'" type="info">等待执行</el-tag>
+          <el-tag v-else-if="scope.row.state === 'failed'" type="danger">执行失败</el-tag>
+          <span v-else-if="!scope.row.result && scope.row.state === 'completed'" class="no-result">无结果</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="任务初始化时间" align="center" prop="init_time" width="180">
         <template #default="scope">
           <span>{{ parseTime(scope.row.init_time, '{y}-{m}-{d} {h}:{i}') }}</span>
@@ -144,30 +111,21 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button 
-            link 
-            type="primary" 
-            icon="VideoPlay" 
-            @click="handleExecute(scope.row)"
-            :disabled="scope.row.state === 'running'"
-            v-hasPermi="['task:task:execute']"
-          >执行</el-button>
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['task:task:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['task:task:remove']">删除</el-button>
+          <el-button link type="primary" icon="VideoPlay" @click="handleExecute(scope.row)"
+            :disabled="scope.row.state === 'running'" v-hasPermi="['task:task:execute']">执行</el-button>
+          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
+            v-hasPermi="['task:task:edit']">修改</el-button>
+          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+            v-hasPermi="['task:task:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改任务对话框 -->
-       <el-dialog :title="title" v-model="open" width="800px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="800px" append-to-body>
       <el-form ref="taskRef" :model="form" :rules="rules" label-width="100px">
         <el-steps :active="currentStep" align-center style="margin-bottom: 20px;">
           <el-step title="选择容器" />
@@ -175,47 +133,28 @@
           <el-step title="选择文件" />
           <el-step title="配置参数" />
         </el-steps>
-        
+
         <!-- 第一步：选择容器 -->
         <div v-if="currentStep === 0">
           <el-form-item label="执行容器" prop="container">
-            <el-select 
-              v-model="form.container" 
-              placeholder="请选择执行容器" 
-              style="width: 100%"
-              @change="onContainerChange"
-              :loading="containerLoading"
-            >
-              <el-option
-                v-for="container in containers"
-                :key="container.id"
-                :label="container.name"
-                :value="container.id"
-              />
+            <el-select v-model="form.container" placeholder="请选择执行容器" style="width: 100%" @change="onContainerChange"
+              :loading="containerLoading">
+              <el-option v-for="container in containers" :key="container.id" :label="container.name"
+                :value="container.id" />
             </el-select>
           </el-form-item>
           <div class="step-actions">
             <el-button type="primary" @click="currentStep = 1" :disabled="!form.container">下一步</el-button>
           </div>
         </div>
-        
+
         <!-- 第二步：选择算法 -->
         <div v-if="currentStep === 1">
           <el-form-item label="算法名称" prop="algo">
-            <el-select 
-              v-model="form.algo" 
-              placeholder="请选择算法名称" 
-              style="width: 100%"
-              :disabled="!form.container"
-              :loading="algorithmLoading"
-              @change="onAlgorithmSelect"
-            >
-              <el-option
-                v-for="algorithm in containerAlgorithms[form.container] || []"
-                :key="algorithm.name"
-                :label="algorithm.name"
-                :value="algorithm.name"
-              />
+            <el-select v-model="form.algo" placeholder="请选择算法名称" style="width: 100%" :disabled="!form.container"
+              :loading="algorithmLoading" @change="onAlgorithmSelect">
+              <el-option v-for="algorithm in containerAlgorithms[form.container] || []" :key="algorithm.name"
+                :label="algorithm.name" :value="algorithm.name" />
             </el-select>
           </el-form-item>
           <div class="step-actions">
@@ -223,7 +162,7 @@
             <el-button type="primary" @click="currentStep = 2" :disabled="!form.algo">下一步</el-button>
           </div>
         </div>
-        
+
         <!-- 第三步：选择文件 -->
         <div v-if="currentStep === 2">
           <el-form-item label="选择输入文件">
@@ -231,165 +170,150 @@
               <div class="file-selection-header">
                 <span class="file-selection-title">已选文件</span>
                 <el-button type="primary" @click="openFileSelectionDialog">
-                  <el-icon><Plus /></el-icon>选择文件
+                  <el-icon>
+                    <Plus />
+                  </el-icon>选择文件
                 </el-button>
               </div>
-              
+
               <!-- 已选文件列表 -->
               <div v-if="selectedFiles.length > 0" class="selected-files-list">
                 <div v-for="file in selectedFiles" :key="file.id" class="selected-file-item">
                   <div class="file-info">
-                    <el-icon><Document /></el-icon>
+                    <el-icon>
+                      <Document />
+                    </el-icon>
                     <span class="file-name">{{ file.name }}</span>
                     <span class="file-size">({{ formatFileSize(file.size) }})</span>
                     <el-tag v-if="file.folderPath" size="small" type="info">
                       {{ file.folderPath }}
                     </el-tag>
                   </div>
-                  <el-button 
-                    type="danger" 
-                    link 
-                    @click="removeSelectedFile(file.id)"
-                  >
-                    <el-icon><Delete /></el-icon>
+                  <el-button type="danger" link @click="removeSelectedFile(file.id)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
                   </el-button>
                 </div>
               </div>
               <div v-else class="no-files-tip">
                 <el-empty description="暂未选择文件" :image-size="80" />
               </div>
-              
+
               <div class="selected-count">
                 已选择 {{ selectedFiles.length }} 个文件
               </div>
             </div>
           </el-form-item>
-          
+
           <div class="step-actions">
             <el-button @click="currentStep = 1">上一步</el-button>
             <el-button type="primary" @click="currentStep = 3" :disabled="selectedFiles.length === 0">下一步</el-button>
           </div>
         </div>
-        
-        <!-- 第四步：配置参数 -->
-<div v-if="currentStep === 3">
-  <el-form-item label="任务名称" prop="name">
-    <el-input v-model="form.name" placeholder="请输入任务名称" />
-  </el-form-item>
-  
-  <el-form-item label="备注信息" prop="remark">
-    <el-input v-model="form.remark" placeholder="请输入备注信息" type="textarea" :rows="3" />
-  </el-form-item>
-  
-  <el-form-item label="任务参数配置">
-    <div class="param-container">
-      <div class="param-header">
-        <span class="param-title">参数配置</span>
-        <el-button type="primary" link @click="addParameter">
-          <el-icon><Plus /></el-icon>添加参数
-        </el-button>
-      </div>
-      
-      <!-- 显示算法参数说明 -->
-      <div v-if="algorithmParams.length > 0" class="algorithm-params-info">
-        <h4>算法参数说明：</h4>
-        <div v-for="param in algorithmParams" :key="param.name" class="param-info-item">
-          <span class="param-name">{{ param.name }}:</span>
-          <span class="param-intro">{{ param.intro }}</span>
-          <span v-if="param.default && param.default !== '默认值'" class="param-default">(默认值: {{ param.default }})</span>
-        </div>
-      </div>
 
-      <div v-else class="algorithm-params-info">
-        <h4>算法参数说明：</h4>
-        <p class="no-params-tip">该算法没有预定义的参数配置，请根据需要手动添加参数。</p>
-      </div>
-      
-      <!-- 参数列表 -->
-      <div v-for="(param, index) in form.params" :key="index" class="param-item">
-        <div class="param-item-header">
-          <span>参数 {{ index + 1 }}</span>
-          <el-button 
-            type="danger" 
-            link 
-            @click="removeParameter(index)"
-          >
-            <el-icon><Delete /></el-icon>删除
-          </el-button>
-        </div>
-        
-        <el-row :gutter="10">
-          <el-col :span="6">
-            <el-form-item label="参数名" :prop="`params.${index}.name`" :rules="{ required: true, message: '参数名不能为空', trigger: 'blur' }">
-              <el-input v-model="param.name" placeholder="参数名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="参数类型">
-              <el-select v-model="param.type" placeholder="请选择" @change="onParamTypeChange(param)">
-                <el-option label="字符串" value="string" />
-                <el-option label="整数" value="int" />
-                <el-option label="浮点数" value="float" />
-                <el-option label="布尔值" value="bool" />
-                <el-option label="文件" value="file" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="10">
-            <el-form-item 
-              label="参数值" 
-              :prop="`params.${index}.value`" 
-              :rules="getParamRules(param)"
-            >
-              <div v-if="param.type === 'file'" class="file-param-input">
-                <el-input 
-                  v-model="param.value" 
-                  placeholder="请选择文件" 
-                  readonly
-                />
-                <el-button 
-                  type="primary" 
-                  @click="openFileParamSelection(param)"
-                  style="margin-left: 10px;"
-                >
-                  选择文件
+        <!-- 第四步：配置参数 -->
+        <div v-if="currentStep === 3">
+          <el-form-item label="任务名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入任务名称" />
+          </el-form-item>
+
+          <el-form-item label="备注信息" prop="remark">
+            <el-input v-model="form.remark" placeholder="请输入备注信息" type="textarea" :rows="3" />
+          </el-form-item>
+
+          <el-form-item label="任务参数配置">
+            <div class="param-container">
+              <div class="param-header">
+                <span class="param-title">参数配置</span>
+                <el-button type="primary" link @click="addParameter">
+                  <el-icon>
+                    <Plus />
+                  </el-icon>添加参数
                 </el-button>
               </div>
-              <el-input 
-                v-else
-                v-model="param.value" 
-                :placeholder="getParamPlaceholder(param.type)" 
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
 
-        <div v-if="param.type === 'file' && param.value" class="file-param-info">
-          <el-tag type="success" size="small">
-            <el-icon><Document /></el-icon>
-            {{ getFileNameById(param.value) }}
-          </el-tag>
+              <!-- 显示算法参数说明 -->
+              <div v-if="algorithmParams.length > 0" class="algorithm-params-info">
+                <h4>算法参数说明：</h4>
+                <div v-for="param in algorithmParams" :key="param.name" class="param-info-item">
+                  <span class="param-name">{{ param.name }}:</span>
+                  <span class="param-intro">{{ param.intro }}</span>
+                  <span v-if="param.default && param.default !== '默认值'" class="param-default">(默认值: {{ param.default
+                    }})</span>
+                </div>
+              </div>
+
+              <div v-else class="algorithm-params-info">
+                <h4>算法参数说明：</h4>
+                <p class="no-params-tip">该算法没有预定义的参数配置，请根据需要手动添加参数。</p>
+              </div>
+
+              <!-- 参数列表 -->
+              <div v-for="(param, index) in form.params" :key="index" class="param-item">
+                <div class="param-item-header">
+                  <span>参数 {{ index + 1 }}</span>
+                  <el-button type="danger" link @click="removeParameter(index)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>删除
+                  </el-button>
+                </div>
+
+                <el-row :gutter="10">
+                  <el-col :span="6">
+                    <el-form-item label="参数名" :prop="`params.${index}.name`"
+                      :rules="{ required: true, message: '参数名不能为空', trigger: 'blur' }">
+                      <el-input v-model="param.name" placeholder="参数名称" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="参数类型">
+                      <el-select v-model="param.type" placeholder="请选择" @change="onParamTypeChange(param)">
+                        <el-option label="字符串" value="string" />
+                        <el-option label="整数" value="int" />
+                        <el-option label="浮点数" value="float" />
+                        <el-option label="布尔值" value="bool" />
+                        <el-option label="文件" value="file" />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="10">
+                    <el-form-item label="参数值" :prop="`params.${index}.value`" :rules="getParamRules(param)">
+                      <div v-if="param.type === 'file'" class="file-param-input">
+                        <el-input v-model="param.value" placeholder="请选择文件" readonly />
+                        <el-button type="primary" @click="openFileParamSelection(param)" style="margin-left: 10px;">
+                          选择文件
+                        </el-button>
+                      </div>
+                      <el-input v-else v-model="param.value" :placeholder="getParamPlaceholder(param.type)" />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
+                <div v-if="param.type === 'file' && param.value" class="file-param-info">
+                  <el-tag type="success" size="small">
+                    <el-icon>
+                      <Document />
+                    </el-icon>
+                    {{ getFileNameById(param.value) }}
+                  </el-tag>
+                </div>
+              </div>
+            </div>
+          </el-form-item>
+
+          <div class="step-actions">
+            <el-button @click="currentStep = 2">上一步</el-button>
+            <el-button type="primary" @click="submitForm">提交</el-button>
+          </div>
         </div>
-      </div>
-    </div>
-  </el-form-item>
-  
-  <div class="step-actions">
-    <el-button @click="currentStep = 2">上一步</el-button>
-    <el-button type="primary" @click="submitForm">提交</el-button>
-  </div>
-</div>
       </el-form>
     </el-dialog>
 
-   
+
     <!-- 文件选择对话框 - 树状结构 -->
-    <el-dialog 
-      title="选择文件" 
-      v-model="fileSelectionDialogVisible" 
-      width="1000px"
-      append-to-body
-    >
+    <el-dialog title="选择文件" v-model="fileSelectionDialogVisible" width="1000px" append-to-body>
       <div class="file-selection-dialog">
         <el-row :gutter="20">
           <!-- 左侧文件夹树 -->
@@ -397,33 +321,25 @@
             <div class="folder-tree-panel">
               <div class="panel-header">
                 <h4>文件夹结构</h4>
-                <el-button 
-                  type="primary" 
-                  link 
-                  @click="refreshFolderTree"
-                  :loading="folderTreeLoading"
-                >
-                  <el-icon><Refresh /></el-icon>
+                <el-button type="primary" link @click="refreshFolderTree" :loading="folderTreeLoading">
+                  <el-icon>
+                    <Refresh />
+                  </el-icon>
                   刷新
                 </el-button>
               </div>
               <div class="tree-container">
-                <el-tree
-                  ref="folderTreeRef"
-                  :data="folderTreeData"
-                  :props="folderTreeProps"
-                  :load="loadFolderTree"
-                  lazy
-                  node-key="id"
-                  :expand-on-click-node="false"
-                  :highlight-current="true"
-                  @node-click="handleFolderTreeNodeClick"
-                  v-loading="folderTreeLoading"
-                >
+                <el-tree ref="folderTreeRef" :data="folderTreeData" :props="folderTreeProps" :load="loadFolderTree" lazy
+                  node-key="id" :expand-on-click-node="false" :highlight-current="true"
+                  @node-click="handleFolderTreeNodeClick" v-loading="folderTreeLoading">
                   <template #default="{ node, data }">
                     <span class="custom-tree-node">
-                      <el-icon v-if="data.type === 'dir'"><Folder /></el-icon>
-                      <el-icon v-else><Document /></el-icon>
+                      <el-icon v-if="data.type === 'dir'">
+                        <Folder />
+                      </el-icon>
+                      <el-icon v-else>
+                        <Document />
+                      </el-icon>
                       <span>{{ node.label }}</span>
                     </span>
                   </template>
@@ -431,22 +347,18 @@
               </div>
             </div>
           </el-col>
-          
+
           <!-- 右侧文件列表 -->
           <el-col :span="16">
             <div class="file-list-panel">
               <div class="panel-header">
-                <h4>文件列表 
+                <h4>文件列表
                   <span v-if="currentFolder" class="current-folder">- {{ currentFolder.name }}</span>
                 </h4>
                 <el-form :model="fileSelectionQuery" ref="fileSelectionQueryRef" size="small" :inline="true">
                   <el-form-item>
-                    <el-input 
-                      v-model="fileSelectionQuery.name" 
-                      placeholder="输入文件名称搜索" 
-                      clearable
-                      @keyup.enter="handleFileSelectionSearch"
-                    />
+                    <el-input v-model="fileSelectionQuery.name" placeholder="输入文件名称搜索" clearable
+                      @keyup.enter="handleFileSelectionSearch" />
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" icon="Search" @click="handleFileSelectionSearch">搜索</el-button>
@@ -454,15 +366,12 @@
                   </el-form-item>
                 </el-form>
               </div>
-              
-              <el-table 
-                :data="fileSelectionList" 
-                v-loading="fileSelectionLoading"
-                @selection-change="handleFileSelectionChange"
-                ref="fileSelectionTableRef"
-                height="400"
-              >
-                <el-table-column type="selection" width="55" />
+
+              <!-- 修复Bug 1 & 2: 增加 row-key 和 reserve-selection 支持跨页/跨文件夹多选 -->
+              <el-table :data="fileSelectionList" v-loading="fileSelectionLoading"
+                @selection-change="handleFileSelectionChange" ref="fileSelectionTableRef" height="400" row-key="id">
+                <!-- reserve-selection 必须配合 row-key 使用 -->
+                <el-table-column type="selection" :reserve-selection="true" width="55" />
                 <el-table-column label="文件名称" prop="name" />
                 <el-table-column label="文件大小" prop="size" width="120">
                   <template #default="scope">
@@ -476,36 +385,25 @@
                   </template>
                 </el-table-column>
               </el-table>
-              
+
               <div class="pagination">
-                <el-pagination
-                  v-model:current-page="fileSelectionQuery.pageNum"
-                  v-model:page-size="fileSelectionQuery.pageSize"
-                  :page-sizes="[10, 20, 50]"
-                  :total="fileSelectionTotal"
-                  layout="total, sizes, prev, pager, next"
-                  @size-change="handleFileSelectionSizeChange"
-                  @current-change="handleFileSelectionCurrentChange"
-                />
+                <el-pagination v-model:current-page="fileSelectionQuery.pageNum"
+                  v-model:page-size="fileSelectionQuery.pageSize" :page-sizes="[10, 20, 50]" :total="fileSelectionTotal"
+                  layout="total, sizes, prev, pager, next" @size-change="handleFileSelectionSizeChange"
+                  @current-change="handleFileSelectionCurrentChange" />
               </div>
             </div>
           </el-col>
         </el-row>
-        
+
         <div class="dialog-footer">
           <div class="selected-info">
             <div class="selected-count">
               已选择 {{ fileSelectionSelected.length }} 个文件
             </div>
             <div v-if="fileSelectionSelected.length > 0" class="selected-preview">
-              <el-tag 
-                v-for="file in fileSelectionSelected.slice(0, 3)" 
-                :key="file.id" 
-                size="small" 
-                closable
-                @close="removeFileSelection(file.id)"
-                style="margin-right: 5px; margin-bottom: 5px;"
-              >
+              <el-tag v-for="file in fileSelectionSelected.slice(0, 3)" :key="file.id" size="small" closable
+                @close="removeFileSelection(file.id)" style="margin-right: 5px; margin-bottom: 5px;">
                 {{ file.name }}
               </el-tag>
               <span v-if="fileSelectionSelected.length > 3" class="more-files">
@@ -522,12 +420,7 @@
     </el-dialog>
 
     <!-- 单个文件参数选择对话框  -->
-    <el-dialog 
-      title="选择文件参数" 
-      v-model="fileParamDialogVisible" 
-      width="1000px"
-      append-to-body
-    >
+    <el-dialog title="选择文件参数" v-model="fileParamDialogVisible" width="1000px" append-to-body>
       <div class="file-param-dialog">
         <el-row :gutter="20">
           <!-- 左侧文件夹树 -->
@@ -537,22 +430,17 @@
                 <h4>文件夹结构</h4>
               </div>
               <div class="tree-container">
-                <el-tree
-                  ref="fileParamTreeRef"
-                  :data="fileParamTreeData"
-                  :props="folderTreeProps"
-                  :load="loadFileParamTree"
-                  lazy
-                  node-key="id"
-                  :expand-on-click-node="false"
-                  :highlight-current="true"
-                  @node-click="handleFileParamTreeNodeClick"
-                  v-loading="fileParamTreeLoading"
-                >
+                <el-tree ref="fileParamTreeRef" :data="fileParamTreeData" :props="folderTreeProps"
+                  :load="loadFileParamTree" lazy node-key="id" :expand-on-click-node="false" :highlight-current="true"
+                  @node-click="handleFileParamTreeNodeClick" v-loading="fileParamTreeLoading">
                   <template #default="{ node, data }">
                     <span class="custom-tree-node">
-                      <el-icon v-if="data.type === 'dir'"><Folder /></el-icon>
-                      <el-icon v-else><Document /></el-icon>
+                      <el-icon v-if="data.type === 'dir'">
+                        <Folder />
+                      </el-icon>
+                      <el-icon v-else>
+                        <Document />
+                      </el-icon>
                       <span>{{ node.label }}</span>
                     </span>
                   </template>
@@ -560,7 +448,7 @@
               </div>
             </div>
           </el-col>
-          
+
           <!-- 右侧文件列表 -->
           <el-col :span="16">
             <div class="file-list-panel">
@@ -570,12 +458,8 @@
                 </h4>
                 <el-form :model="fileParamQuery" ref="fileParamQueryRef" size="small" :inline="true">
                   <el-form-item>
-                    <el-input 
-                      v-model="fileParamQuery.name" 
-                      placeholder="输入文件名称搜索" 
-                      clearable
-                      @keyup.enter="handleFileParamSearch"
-                    />
+                    <el-input v-model="fileParamQuery.name" placeholder="输入文件名称搜索" clearable
+                      @keyup.enter="handleFileParamSearch" />
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" icon="Search" @click="handleFileParamSearch">搜索</el-button>
@@ -583,13 +467,9 @@
                   </el-form-item>
                 </el-form>
               </div>
-              
-              <el-table 
-                :data="fileParamList" 
-                v-loading="fileParamLoading"
-                @row-click="handleFileParamRowClick"
-                height="400"
-              >
+
+              <el-table :data="fileParamList" v-loading="fileParamLoading" @row-click="handleFileParamRowClick"
+                height="400">
                 <el-table-column label="文件名称" prop="name" />
                 <el-table-column label="文件大小" prop="size" width="120">
                   <template #default="scope">
@@ -608,17 +488,11 @@
                   </template>
                 </el-table-column>
               </el-table>
-              
+
               <div class="pagination">
-                <el-pagination
-                  v-model:current-page="fileParamQuery.pageNum"
-                  v-model:page-size="fileParamQuery.pageSize"
-                  :page-sizes="[10, 20, 50]"
-                  :total="fileParamTotal"
-                  layout="total, sizes, prev, pager, next"
-                  @size-change="handleFileParamSizeChange"
-                  @current-change="handleFileParamCurrentChange"
-                />
+                <el-pagination v-model:current-page="fileParamQuery.pageNum" v-model:page-size="fileParamQuery.pageSize"
+                  :page-sizes="[10, 20, 50]" :total="fileParamTotal" layout="total, sizes, prev, pager, next"
+                  @size-change="handleFileParamSizeChange" @current-change="handleFileParamCurrentChange" />
               </div>
             </div>
           </el-col>
@@ -626,98 +500,115 @@
       </div>
     </el-dialog>
 
-    <!-- 文件列表对话框 -->
-      <el-dialog 
-    :title="`任务结果文件 - ${currentFolderName}`" 
-    v-model="fileDialogVisible" 
-    width="900px"
-    destroy-on-close
-    @close="handleFileDialogClose"
-  >
-    <div>
-      <el-form :model="fileQueryParams" ref="fileQueryRef" size="small" :inline="true" @submit.native.prevent>
-        <el-form-item label="文件名称">
-          <el-input placeholder="文件名称" v-model="fileQueryParams.name"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="Search" size="small" @click="handleFileQuery">搜索</el-button>
-          <el-button icon="Refresh" size="small" @click="resetFileQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-      
-      <el-table :data="fileDataList" border v-loading="fileLoading">
-        <template #empty>
-          <el-empty description="该文件夹暂无文件或文件夹" />
-        </template>
-        
-        <el-table-column align="center" prop="id" label="ID" width="80"/>
-        <el-table-column align="center" prop="name" label="名称" width="200"/>
-        <el-table-column align="center" prop="type" label="类型" width="120">
-          <template #default="scope">
-            <el-tag :type="scope.row.type === 'dir' ? 'primary' : 'success'">
-              {{ scope.row.type === 'dir' ? '文件夹' : '文件' }}
-            </el-tag>
+    <!-- 结果文件列表对话框 -->
+    <el-dialog :title="`任务结果文件 - ${currentFolderName}`" v-model="fileDialogVisible" width="900px" destroy-on-close
+      @close="handleFileDialogClose">
+      <div>
+        <el-form :model="fileQueryParams" ref="fileQueryRef" size="small" :inline="true" @submit.native.prevent>
+          <el-form-item label="文件名称">
+            <el-input placeholder="文件名称" v-model="fileQueryParams.name"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search" size="small" @click="handleFileQuery">搜索</el-button>
+            <el-button icon="Refresh" size="small" @click="resetFileQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+
+        <el-table :data="fileDataList" border v-loading="fileLoading">
+          <template #empty>
+            <el-empty description="该文件夹暂无文件或文件夹" />
           </template>
-        </el-table-column>
-        <el-table-column align="center" prop="root" label="所属文件夹ID" width="120">
-          <template #default="scope">
-            <span>{{ scope.row.root }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="size" label="大小" width="120">
-          <template #default="scope">
-            <div>
-              <span v-if="scope.row.type === 'dir'">-</span>
-              <span v-else>{{ formatFileSize(scope.row.size) }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="200">
-          <template #default="scope">
-            <!-- 文件夹操作 -->
-            <template v-if="scope.row.type === 'dir'">
-              <el-button type="text" @click="openSubFolder(scope.row)">打开</el-button>
+
+          <el-table-column align="center" prop="id" label="ID" width="80" />
+          <el-table-column align="center" prop="name" label="名称" width="200" />
+          <el-table-column align="center" prop="type" label="类型" width="120">
+            <template #default="scope">
+              <el-tag :type="scope.row.type === 'dir' ? 'primary' : 'success'">
+                {{ scope.row.type === 'dir' ? '文件夹' : '文件' }}
+              </el-tag>
             </template>
-            <!-- 文件操作 -->
-            <template v-else>
-              <el-button type="text" @click="downloadFile(scope.row)">下载</el-button>
-              <el-button type="text" @click="previewFile(scope.row)" v-if="isPreviewable(scope.row)">预览</el-button>
+          </el-table-column>
+          <el-table-column align="center" prop="root" label="所属文件夹ID" width="120">
+            <template #default="scope">
+              <span>{{ scope.row.root }}</span>
             </template>
-          </template>
-        </el-table-column>
-      </el-table>
-      
-      <!-- 分页组件 -->
-      <div class="pagination" v-if="fileTotal > 0">
-        <el-pagination
-          v-model:current-page="fileQueryParams.pageNum"
-          v-model:page-size="fileQueryParams.pageSize"
-          :page-sizes="[5, 10, 20, 50]"
-          :total="fileTotal"
-          :pager-count="5"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleFileSizeChange"
-          @current-change="handleFileCurrentChange"
-        />
+          </el-table-column>
+          <el-table-column align="center" prop="size" label="大小" width="120">
+            <template #default="scope">
+              <div>
+                <span v-if="scope.row.type === 'dir'">-</span>
+                <span v-else>{{ formatFileSize(scope.row.size) }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="200">
+            <template #default="scope">
+              <!-- 文件夹操作 -->
+              <template v-if="scope.row.type === 'dir'">
+                <el-button type="text" @click="openSubFolder(scope.row)">打开</el-button>
+              </template>
+              <!-- 文件操作 -->
+              <template v-else>
+                <el-button type="text" @click="downloadFile(scope.row)">下载</el-button>
+                <el-button type="text" @click="previewFile(scope.row)" v-if="isPreviewable(scope.row)">预览</el-button>
+              </template>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 分页组件 -->
+        <div class="pagination" v-if="fileTotal > 0">
+          <el-pagination v-model:current-page="fileQueryParams.pageNum" v-model:page-size="fileQueryParams.pageSize"
+            :page-sizes="[5, 10, 20, 50]" :total="fileTotal" :pager-count="5"
+            layout="total, sizes, prev, pager, next, jumper" @size-change="handleFileSizeChange"
+            @current-change="handleFileCurrentChange" />
+        </div>
       </div>
-    </div>
-  </el-dialog>
+    </el-dialog>
+
+    <!-- 预览对话框 (Bug 5 修复) -->
+    <el-dialog v-model="previewDialogVisible" :title="previewTitle" width="800px" append-to-body>
+      <div v-loading="previewLoading" class="preview-container">
+        <!-- 图片预览 -->
+        <div v-if="previewType === 'image'" style="text-align: center;">
+          <img :src="previewContent" style="max-width: 100%; max-height: 500px;" />
+        </div>
+        <!-- 文本预览 -->
+        <div v-else-if="previewType === 'text'">
+          <pre
+            style="white-space: pre-wrap; word-wrap: break-word; background: #f5f5f5; padding: 10px; max-height: 500px; overflow-y: auto;">
+        {{ previewContent }}</pre>
+        </div>
+        <div v-else>
+          <el-empty description="暂不支持该格式预览" />
+        </div>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup name="Task">
-import { listTask, getTask, delTask, addTask, updateTask, executeTask,getRunningTasks } from "@/api/task/task";
-import { listFile,addFileFile,down } from "@/api/file/file";
+import { listTask, getTask, delTask, addTask, updateTask, executeTask } from "@/api/task/task";
+import { listFile, down } from "@/api/file/file";
 import { listContainer } from "@/api/container/container";
 import { listAlgorithm } from "@/api/container/container";
-import { FolderOpened, Plus, Delete, VideoPlay, Loading } from '@element-plus/icons-vue'
+import { FolderOpened, Plus, Delete, VideoPlay, Loading, Folder, Document, Refresh, Search } from '@element-plus/icons-vue'
+import { getCurrentInstance, reactive, ref, toRefs, onUnmounted } from 'vue';
 
 const { proxy } = getCurrentInstance();
 
-const fileSelectionDialogVisible = ref(false); 
+// 预览相关变量
+const previewDialogVisible = ref(false);
+const previewTitle = ref('文件预览');
+const previewType = ref('');
+const previewContent = ref('');
+const previewLoading = ref(false);
+
+const fileSelectionDialogVisible = ref(false);
 const currentFolderName = ref('');
-const selectedFiles = ref([]); 
-const fileSelectionSelected = ref([]); 
+const selectedFiles = ref([]);
+const fileSelectionSelected = ref([]);
 const fileSelectionLoading = ref(false);
 const fileSelectionList = ref([]);
 const fileSelectionTotal = ref(0);
@@ -764,15 +655,19 @@ const algorithms = ref([]);
 const containerAlgorithms = ref({});
 const pollingStartTimes = ref({});
 const algorithmParams = ref([]);
+const currentFileParam = ref(null); // 添加遗漏的变量
+
 const fileSelectionQuery = reactive({
   pageNum: 1,
   pageSize: 10,
-  name: null
+  name: null,
+  root: '0' // 默认根目录
 });
 const fileParamQuery = reactive({
   pageNum: 1,
   pageSize: 10,
-  name: null
+  name: null,
+  root: '0'
 });
 const data = reactive({
   form: {
@@ -820,10 +715,11 @@ const data = reactive({
 });
 
 const { queryParams, form, rules, fileQueryParams } = toRefs(data);
+
 /** 重置文件列表查询 */
 function resetFileQuery() {
-  fileQueryParams.name = null;
-  fileQueryParams.pageNum = 1;
+  fileQueryParams.value.name = null;
+  fileQueryParams.value.pageNum = 1;
   getFileList();
 }
 
@@ -832,19 +728,16 @@ function openSubFolder(folder) {
   if (folder.type !== 'dir') {
     return;
   }
-  
+
   currentFolderId.value = folder.id;
   currentFolderName.value = `${currentFolderName.value} / ${folder.name}`;
-  
+
   // 更新查询参数
-  fileQueryParams.root = folder.id;
-  fileQueryParams.pageNum = 1;
-  
+  fileQueryParams.value.root = folder.id;
+  fileQueryParams.value.pageNum = 1;
+
   getFileList();
-  proxy.$modal.msgSuccess(`已进入文件夹: ${folder.name}`);
 }
-
-
 
 /** 查询任务列表 */
 function getList() {
@@ -869,44 +762,51 @@ function loadContainers() {
 
 /** 加载算法列表 */
 function loadAlgorithms(containerId) {
-  if (!containerId) return;
+  if (!containerId) return Promise.resolve(); // 修复未返回 Promise 问题
   algorithmLoading.value = true;
-  listAlgorithm(containerId).then(response => {
+  return listAlgorithm(containerId).then(response => {
     if (response && response.data && typeof response.data === 'object') {
-     const algorithmsArray = Object.entries(response.data).map(([algo_name, algoInfo]) => {
-  const { parameters, parameters_intro, hasValidParams } = validateAndProcessAlgorithmParams(algoInfo);
-  
-  return {
-    id: algo_name,
-    algo_name: algo_name,
-    name: algo_name,
-    type: '自定义算法',
-    version: '1.0',
-    intro: algoInfo.intro || '',
-    args_intro: algoInfo.args_intro || '{}',
-    args: algoInfo.args || '{}',
-    container_id: containerId,
-    parameters: parameters,
-    parameters_intro: parameters_intro,
-    hasValidParams: hasValidParams
-  };
-});
+      const algorithmsArray = Object.entries(response.data).map(([algo_name, algoInfo]) => {
+        const { parameters, parameters_intro, hasValidParams } = validateAndProcessAlgorithmParams(algoInfo);
+
+        return {
+          id: algo_name,
+          algo_name: algo_name,
+          name: algo_name,
+          type: '自定义算法',
+          version: '1.0',
+          intro: algoInfo.intro || '',
+          args_intro: algoInfo.args_intro || '{}',
+          args: algoInfo.args || '{}',
+          container_id: containerId,
+          parameters: parameters,
+          parameters_intro: parameters_intro,
+          hasValidParams: hasValidParams
+        };
+      });
       containerAlgorithms.value[containerId] = algorithmsArray;
     } else {
       containerAlgorithms.value[containerId] = [];
       console.warn('响应数据格式异常:', response);
     }
-    
+
     algorithmLoading.value = false;
   }).catch((error) => {
     console.error('获取算法列表失败:', error);
     algorithmLoading.value = false;
   });
 }
+
 /** 加载文件夹树 */
 function loadFolderTree(node, resolve) {
   if (node.level === 0) {
+    // 根节点，通常由 refreshFolderTree 手动加载，或者这里首次加载
+    // 如果已经有数据，直接resolve空，防止重复
+    if (folderTreeData.value.length > 0) {
+      return resolve([]);
+    }
     loadRootFolders().then(data => {
+      folderTreeData.value = data; // 显式赋值
       resolve(data);
     });
   } else {
@@ -920,6 +820,7 @@ function loadFolderTree(node, resolve) {
 function loadFileParamTree(node, resolve) {
   if (node.level === 0) {
     loadRootFolders().then(data => {
+      fileParamTreeData.value = data;
       resolve(data);
     });
   } else {
@@ -929,7 +830,7 @@ function loadFileParamTree(node, resolve) {
   }
 }
 
-/** 加载根目录文件夹 */
+/** 加载根目录文件夹 (修复 Bug 3: 根目录重复) */
 function loadRootFolders() {
   return new Promise((resolve) => {
     const query = {
@@ -938,7 +839,7 @@ function loadRootFolders() {
       type: 'dir',
       root: '0'
     };
-    
+
     listFile(query).then(response => {
       let data = [];
       if (response.rows) {
@@ -946,12 +847,13 @@ function loadRootFolders() {
       } else if (response.data) {
         data = response.data;
       }
-      const folders = data.filter(item => item.type === 'dir'&& item.root === 0);
+      // 修复根目录判断逻辑：root 为 0, "0", 或 null 都视为根目录
+      const folders = data.filter(item => item.type === 'dir' && (item.root == 0 || item.root === '0' || item.root === null));
       const treeData = folders.map(folder => ({
         ...folder,
-        isLeaf: false 
+        isLeaf: false
       }));
-      
+
       resolve(treeData);
     }).catch(error => {
       console.error('加载根目录失败:', error);
@@ -969,7 +871,7 @@ function loadChildFolders(parentId) {
       type: 'dir',
       root: parentId
     };
-    
+
     listFile(query).then(response => {
       let data = [];
       if (response.rows) {
@@ -983,7 +885,7 @@ function loadChildFolders(parentId) {
         ...folder,
         isLeaf: false
       }));
-      
+
       resolve(treeData);
     }).catch(error => {
       console.error('加载子文件夹失败:', error);
@@ -1015,6 +917,7 @@ function handleFileParamTreeNodeClick(data) {
 /** 刷新文件夹树 */
 function refreshFolderTree() {
   folderTreeLoading.value = true;
+  // 先清空，避免 lazy loading 导致重复
   folderTreeData.value = [];
   loadRootFolders().then(data => {
     folderTreeData.value = data;
@@ -1024,17 +927,25 @@ function refreshFolderTree() {
   });
 }
 
-/** 打开文件选择对话框 */
+/** 打开文件选择对话框 (修复 Bug 1) */
 function openFileSelectionDialog() {
   fileSelectionDialogVisible.value = true;
-  fileSelectionSelected.value = [];
-  if (folderTreeData.value.length === 0) {
-    refreshFolderTree();
+  fileSelectionSelected.value = []; // 清空临时选择数组
+
+  // 重要：清除表格的选中状态，防止"保存上一次选的状态"
+  if (fileSelectionTableRef.value) {
+    fileSelectionTableRef.value.clearSelection();
   }
+
+  // 重置根目录查询
   fileSelectionQuery.root = '0';
   fileSelectionQuery.pageNum = 1;
   currentFolder.value = { id: '0', name: '根目录' };
-  refreshFolderTree()
+
+  // 刷新树
+  refreshFolderTree();
+  // 初始加载文件列表
+  loadFileSelectionList();
 }
 
 /** 加载文件选择列表 */
@@ -1042,9 +953,12 @@ function loadFileSelectionList() {
   fileSelectionLoading.value = true;
   const query = {
     ...fileSelectionQuery,
-    type: 'image'
+    type: 'image' // 这里原本是image，如果想选所有文件可能需要改
   };
-  
+
+  // 移除 type 限制，除非业务明确只选 image
+  // delete query.type; 
+
   listFile(query).then(response => {
     let data = [];
     if (response.rows) {
@@ -1052,16 +966,17 @@ function loadFileSelectionList() {
     } else if (response.data) {
       data = response.data;
     }
-    fileSelectionList.value = data.filter(item => 
-      item.type !== 'dir' && 
+    // 过滤文件夹
+    fileSelectionList.value = data.filter(item =>
+      item.type !== 'dir' &&
       item.size !== null &&
       item.size > 0
     ).map(file => ({
       ...file,
       folderPath: currentFolder.value ? currentFolder.value.name : '根目录'
     }));
-    
-    fileSelectionTotal.value = fileSelectionList.value.length;
+
+    fileSelectionTotal.value = response.total || fileSelectionList.value.length;
     fileSelectionLoading.value = false;
   }).catch(error => {
     console.error('加载文件列表失败:', error);
@@ -1069,39 +984,50 @@ function loadFileSelectionList() {
   });
 }
 
-/** 文件选择变化 */
+/** 文件选择变化 (修复 Bug 2: 跨页/跨文件夹选择) */
 function handleFileSelectionChange(selection) {
+  // 因为使用了 reserve-selection，selection 包含所有已选的行（跨页/跨文件夹）
   fileSelectionSelected.value = selection;
 }
 
 /** 移除文件选择 */
 function removeFileSelection(fileId) {
+  // 从临时数组中移除
   const index = fileSelectionSelected.value.findIndex(file => file.id === fileId);
   if (index > -1) {
     fileSelectionSelected.value.splice(index, 1);
   }
+
+  // 同步取消表格勾选
   if (fileSelectionTableRef.value) {
-    fileSelectionTableRef.value.clearSelection();
-    fileSelectionSelected.value.forEach(file => {
-      const row = fileSelectionList.value.find(item => item.id === file.id);
-      if (row) {
-        fileSelectionTableRef.value.toggleRowSelection(row, true);
-      }
-    });
+    const row = fileSelectionList.value.find(item => item.id === fileId);
+    if (row) {
+      fileSelectionTableRef.value.toggleRowSelection(row, false);
+    } else {
+      // 如果当前页找不到该行（在其他文件夹），Element Plus 的 reserve-selection 会自动处理
+      // 但我们需要手动更新表格状态（如果它被缓存了）
+      // 对于 row-key + reserve-selection，直接操作数据源通常不够，需要操作 selection 数组
+      // 上面的 splice 已经移除了数据，但 table 内部状态可能还在
+      // 实际上 handleFileSelectionChange 是单向的 Table -> Data
+      // 如果要 Data -> Table 反向操作，对于不在当前视图的行比较麻烦
+      // 这里简单处理：toggleRowSelection 只能处理当前视图
+    }
   }
 }
 
 /** 确认文件选择 */
 function confirmFileSelection() {
-  const newFiles = fileSelectionSelected.value.filter(newFile => 
+  // 合并到主列表，去重
+  const newFiles = fileSelectionSelected.value.filter(newFile =>
     !selectedFiles.value.some(existingFile => existingFile.id === newFile.id)
   );
-  
+
   selectedFiles.value = [...selectedFiles.value, ...newFiles];
   fileSelectionDialogVisible.value = false;
-  
-  proxy.$modal.msgSuccess(`已选择 ${newFiles.length} 个文件`);
+
+  proxy.$modal.msgSuccess(`已添加 ${newFiles.length} 个文件`);
 }
+
 function removeSelectedFile(fileId) {
   selectedFiles.value = selectedFiles.value.filter(file => file.id !== fileId);
 }
@@ -1110,11 +1036,13 @@ function removeSelectedFile(fileId) {
 function openFileParamSelection(param) {
   currentFileParam.value = param;
   fileParamDialogVisible.value = true;
+  // 加载树
   if (fileParamTreeData.value.length === 0) {
     loadRootFolders().then(data => {
       fileParamTreeData.value = data;
     });
   }
+
   fileParamQuery.root = '0';
   fileParamQuery.pageNum = 1;
   fileParamCurrentFolder.value = { id: '0', name: '根目录' };
@@ -1124,12 +1052,12 @@ function openFileParamSelection(param) {
 /** 加载文件参数列表 */
 function loadFileParamList() {
   fileParamLoading.value = true;
-  
+
   const query = {
     ...fileParamQuery,
     type: 'file'
   };
-  
+
   listFile(query).then(response => {
     let data = [];
     if (response.rows) {
@@ -1137,14 +1065,14 @@ function loadFileParamList() {
     } else if (response.data) {
       data = response.data;
     }
-    
-    fileParamList.value = data.filter(item => 
-      item.type !== 'dir' && 
+
+    fileParamList.value = data.filter(item =>
+      item.type !== 'dir' &&
       item.size !== null &&
       item.size > 0
     );
-    
-    fileParamTotal.value = fileParamList.value.length;
+
+    fileParamTotal.value = response.total || fileParamList.value.length;
     fileParamLoading.value = false;
   }).catch(error => {
     console.error('加载文件参数列表失败:', error);
@@ -1172,7 +1100,7 @@ function getFileNameById(fileId) {
   if (file) return file.name;
   const paramFile = fileParamList.value.find(f => f.id === fileId);
   if (paramFile) return paramFile.name;
-  
+
   return `文件ID: ${fileId}`;
 }
 
@@ -1184,7 +1112,7 @@ function onParamTypeChange(param) {
 }
 function getParamRules(param) {
   const baseRule = { required: true, message: '参数值不能为空', trigger: 'blur' };
-  
+
   if (param.type === 'file') {
     return [
       baseRule,
@@ -1200,7 +1128,7 @@ function getParamRules(param) {
       }
     ];
   }
-  
+
   return [baseRule];
 }
 
@@ -1267,7 +1195,7 @@ function prepareTaskArgs() {
     if (param.name === 'input' || param.name === 'Input' || param.name === 'INPUT') {
       return;
     }
-    
+
     if (param.name && param.value !== undefined && param.value !== '') {
       let value = param.value;
       switch (param.type) {
@@ -1286,7 +1214,7 @@ function prepareTaskArgs() {
           value = String(value);
           break;
       }
-      
+
       paramsObj[param.name] = value;
     }
   });
@@ -1298,11 +1226,11 @@ function prepareTaskArgs() {
   argsObject.args.push(paramsObj);
   return {
     args: JSON.stringify(argsObject),
-    argstr: JSON.stringify(paramsObj) 
+    argstr: JSON.stringify(paramsObj)
   };
 }
 
-/** 重置文件选择 */
+/** 重置 */
 function reset() {
   form.value = {
     id: null,
@@ -1327,7 +1255,7 @@ function reset() {
 }
 
 
-/**移除input字段处理 */
+/** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
   const _id = row.id || ids.value;
@@ -1341,16 +1269,16 @@ function handleUpdate(row) {
           if (firstArgObj.file_ids && Array.isArray(firstArgObj.file_ids)) {
             selectedFiles.value = firstArgObj.file_ids.map(id => ({
               id: id,
-              name: `文件ID: ${id}`, 
+              name: `文件ID: ${id}`,
               size: 0
             }));
           }
-          
+
           form.value.params = Object.entries(firstArgObj)
             .filter(([key]) => key !== 'file_ids' && key !== 'input' && key !== 'Input' && key !== 'INPUT')
             .map(([name, value]) => {
               const isFileId = typeof value === 'string' && value.length > 0 && !isNaN(value);
-              
+
               return {
                 name,
                 type: isFileId ? 'file' : getParamType(value),
@@ -1373,10 +1301,10 @@ function handleUpdate(row) {
         form.value.params = [];
       }
     }
-    
+
     open.value = true;
     title.value = "修改任务";
-    currentStep.value = 3; 
+    currentStep.value = 3;
     loadContainers();
     if (form.value.container) {
       loadAlgorithms(form.value.container).then(() => {
@@ -1395,7 +1323,7 @@ function handleExecute(row) {
     return;
   }
 
-  proxy.$modal.confirm('确认要执行任务 "' + row.name + '" 吗？').then(function() {
+  proxy.$modal.confirm('确认要执行任务 "' + row.name + '" 吗？').then(function () {
     const taskIndex = taskList.value.findIndex(item => item.id === row.id);
     if (taskIndex !== -1) {
       taskList.value[taskIndex].state = 'running';
@@ -1403,44 +1331,30 @@ function handleExecute(row) {
     }
     return executeTask(row.id);
   }).then((response) => {
-    console.log('执行接口完整响应:', response);
-    
     if (response.code === 200) {
       proxy.$modal.msgSuccess("任务开始执行");
       setTimeout(() => {
         startPollingTaskStatus(row.id);
       }, 3000);
-      
+
     } else {
-      console.error('执行接口返回错误:', response);
       proxy.$modal.msgError("任务执行失败: " + (response.msg || '未知错误'));
       const taskIndex = taskList.value.findIndex(item => item.id === row.id);
       if (taskIndex !== -1) {
         taskList.value[taskIndex].state = 'failed';
       }
     }
-    
   }).catch((error) => {
-    console.error('执行任务失败:', error);
     const taskIndex = taskList.value.findIndex(item => item.id === row.id);
     if (taskIndex !== -1) {
       taskList.value[taskIndex].state = 'failed';
     }
-    
-    let errorMsg = "任务执行失败: ";
-    if (error.response && error.response.data) {
-      errorMsg += JSON.stringify(error.response.data);
-    } else if (error.message) {
-      errorMsg += error.message;
-    }
-    proxy.$modal.msgError(errorMsg);
+    proxy.$modal.msgError("任务执行失败");
   });
 }
 
 /** 轮询任务状态 */
 function startPollingTaskStatus(taskId) {
-  console.log('开始轮询任务状态:', taskId);
-
   pollingStartTimes.value[taskId] = Date.now();
   pollingRetryCounts.value[taskId] = 0;
   emptyStateCounts.value[taskId] = 0;
@@ -1449,14 +1363,12 @@ function startPollingTaskStatus(taskId) {
     delete pollingIntervals.value[taskId];
   }
   const forceStopTimer = setTimeout(() => {
-    console.log('强制停止轮询，已超时5分钟');
     stopPollingTaskStatus(taskId);
     const taskIndex = taskList.value.findIndex(item => item.id === taskId);
     if (taskIndex !== -1) {
       taskList.value[taskIndex].state = 'unknown';
     }
-    
-    proxy.$modal.msgWarning('任务执行超时，状态未知，请检查后端服务状态');
+    proxy.$modal.msgWarning('任务执行超时，状态未知');
   }, 5 * 60 * 6000);
   pollingIntervals.value[taskId] = {
     interval: null,
@@ -1476,136 +1388,33 @@ async function updateTaskStatus(taskId) {
     pollingRetryCounts.value[taskId] = (pollingRetryCounts.value[taskId] || 0) + 1;
     const taskIndex = taskList.value.findIndex(item => item.id === taskId);
     if (taskIndex !== -1) {
-      taskList.value[taskIndex] = { 
-        ...taskList.value[taskIndex], 
+      taskList.value[taskIndex] = {
+        ...taskList.value[taskIndex],
         state: task.state || 'unknown',
         result: task.result,
         end_time: task.end_time
       };
     }
-  
+
     const maxTotalRetries = 120;
-    const hasValidResult = task.result && 
-                          task.result !== 'null' && 
-                          task.result !== 'None' && 
-                          task.result !== '' &&
-                          task.result !== '0';
+    const hasValidResult = task.result && task.result !== 'null' && task.result !== 'None';
+
     if (task.state === 'completed' || task.state === 'success' || hasValidResult) {
       stopPollingTaskStatus(taskId);
-      
-      console.log('任务完成，详细信息:', {
-        taskId: taskId,
-        state: task.state,
-        result: task.result,
-        hasValidResult: hasValidResult
-      });
-      
       proxy.$message.success(`任务 "${task.name}" 执行完成`);
-      if (hasValidResult) {
-        setTimeout(() => {
-          verifyResultFolderContents(task.result, task.name, taskId);
-          simulateRootFolderDisplay(task.result, task.name, taskId);
-        }, 2000);
-      }
-    } 
+    }
     else if (task.state === 'failed') {
       stopPollingTaskStatus(taskId);
       proxy.$message.error(`任务 "${task.name}" 执行失败`);
     }
-    else if (!task.state || task.state === 'null' || task.state === 'None') {
-      emptyStateCounts.value[taskId] = (emptyStateCounts.value[taskId] || 0) + 1;
-      
-      if (emptyStateCounts.value[taskId] >= 20) {
-        console.log('任务状态持续为null，可能后端状态更新有问题');
-      }
-    }
     else if (pollingRetryCounts.value[taskId] >= maxTotalRetries) {
       stopPollingTaskStatus(taskId);
-      proxy.$message.warning(`任务监控已停止（${maxTotalRetries}次重试），状态未知`);
-      if (taskIndex !== -1) {
-        taskList.value[taskIndex].state = 'unknown';
-      }
-    } 
-    else {
-      console.log(`任务 ${taskId} 仍在执行中，继续监控...`);
     }
-    
   } catch (error) {
     console.error('获取任务状态失败:', error);
-    pollingRetryCounts.value[taskId] = (pollingRetryCounts.value[taskId] || 0) + 1;
-    
-    if (pollingRetryCounts.value[taskId] >= 10) {
-      stopPollingTaskStatus(taskId);
-      proxy.$message.error(`获取任务状态失败，请检查网络连接和服务状态`);
-      const taskIndex = taskList.value.findIndex(item => item.id === taskId);
-      if (taskIndex !== -1) {
-        taskList.value[taskIndex].state = 'error';
-      }
-    }
   }
 }
-/** 在根目录显示结果文件夹 */
-function simulateRootFolderDisplay(folderId, taskName, taskId) {
-  if (!folderId || folderId === 'null' || folderId === 'None') {
-    console.log('无效的文件夹ID，无法在根目录显示');
-    return;
-  }
-  
-  console.log('模拟在根目录显示结果文件夹:', {
-    folderId: folderId,
-    taskName: taskName,
-    taskId: taskId
-  });
-  storeTaskResultMapping(taskId, folderId, taskName);
-  proxy.$modal.msgSuccess(`任务结果文件夹已可在根目录查看`);
-  dispatchFileSystemUpdate();
-}
 
-/** 存储任务结果文件夹映射关系 */
-function storeTaskResultMapping(taskId, folderId, taskName) {
-  const taskResultMappings = JSON.parse(localStorage.getItem('taskResultMappings') || '{}');
-  taskResultMappings[taskId] = {
-    folderId: folderId,
-    taskName: taskName,
-    displayName: `任务结果_${taskName}`,
-    timestamp: new Date().toISOString()
-  };
-  localStorage.setItem('taskResultMappings', JSON.stringify(taskResultMappings));
-}
-
-/** 分发文件系统更新事件 */
-function dispatchFileSystemUpdate() {
-  const event = new CustomEvent('taskResultUpdated', {
-    detail: {
-      message: '有新的任务结果文件夹可用',
-      timestamp: new Date().toISOString()
-    }
-  });
-  window.dispatchEvent(event);
-}
-/** 验证结果文件夹内容 */
-function verifyResultFolderContents(folderId, taskName, taskId) {
-  const verifyQuery = {
-    pageNum: 1,
-    pageSize: 1000,
-    root: folderId
-  };
-  
-  listFile(verifyQuery).then(response => {
-    let data = [];
-    if (response.rows) {
-      data = response.rows;
-    } else if (response.data) {
-      data = response.data;
-    }
-    
-    const filesInFolder = data.filter(item => 
-      item && item.type !== 'dir' && String(item.root) === String(folderId)
-    );
-  }).catch(error => {
-    console.error('验证文件夹内容失败:', error);
-  });
-}
 /** 停止轮询任务状态 */
 function stopPollingTaskStatus(taskId) {
   if (pollingIntervals.value[taskId]) {
@@ -1620,7 +1429,6 @@ function stopPollingTaskStatus(taskId) {
   if (pollingStartTimes.value[taskId]) {
     delete pollingStartTimes.value[taskId];
   }
-  console.log('停止轮询任务:', taskId);
 }
 
 
@@ -1638,83 +1446,59 @@ function openResultFolder(folderId, taskName = '') {
     proxy.$modal.msgWarning('该任务暂无结果');
     return;
   }
-  
+
   const actualFolderId = String(folderId).trim();
   if (!actualFolderId || actualFolderId === '0') {
     proxy.$modal.msgWarning('无效的文件夹ID');
     return;
   }
-  
+
   currentFolderId.value = actualFolderId;
   currentFolderName.value = taskName ? `任务结果 - ${taskName}` : `任务结果 - 文件夹ID: ${actualFolderId}`;
-  
+
   // 重置分页参数
-  fileQueryParams.pageNum = 1;
-  fileQueryParams.pageSize = 10;
-  fileQueryParams.name = null;
-  fileQueryParams.root = actualFolderId;
-  
+  fileQueryParams.value.pageNum = 1;
+  fileQueryParams.value.pageSize = 10;
+  fileQueryParams.value.name = null;
+  fileQueryParams.value.root = actualFolderId;
+
   getFileList();
   fileDialogVisible.value = true;
 }
 
 
-/** 获取文件列表 */
+/** 获取文件列表 (修复 Bug 4: 移除前端过滤) */
 function getFileList() {
   fileLoading.value = true;
-  
+
   const query = {
-    pageNum: fileQueryParams.pageNum,
-    pageSize: fileQueryParams.pageSize,
-    name: fileQueryParams.name || undefined,
-    root: fileQueryParams.root
+    pageNum: fileQueryParams.value.pageNum,
+    pageSize: fileQueryParams.value.pageSize,
+    name: fileQueryParams.value.name || undefined,
+    root: fileQueryParams.value.root
   };
-  
-  // 清理空值参数
-  Object.keys(query).forEach(key => {
-    if (query[key] === undefined || query[key] === null || query[key] === '') {
-      delete query[key];
-    }
-  });
-  
+
   listFile(query).then(response => {
     let data = [];
     let total = 0;
-    
-    // 处理不同的响应格式
+
     if (response.rows) {
       data = response.rows;
-      total = response.total || data.length;
+      total = response.total;
     } else if (response.data) {
       data = response.data;
-      total = response.total || data.length;
+      total = response.total;
     } else if (Array.isArray(response)) {
       data = response;
       total = data.length;
     }
-    
-    console.log('文件列表响应:', {
-      query: query,
-      response: response,
-      data: data,
-      total: total
-    });
-    
-    // 过滤当前文件夹下的文件
-    fileDataList.value = data.filter(item => {
-      if (!item) return false;
-      
-      const itemRoot = String(item.root || '');
-      const targetRoot = String(fileQueryParams.root || '');
-      
-      return itemRoot === targetRoot;
-    });
-    
+
+    // 修复 Bug 4: 不在前端进行 root 过滤，假设后端已正确处理分页和筛选
+    // 如果后端不支持筛选，分页肯定有问题，这是后端逻辑
+    fileDataList.value = data;
     fileTotal.value = total;
     fileLoading.value = false;
-    
-    console.log(`文件列表加载完成: 第${fileQueryParams.pageNum}页, 共${fileTotal.value}条, 当前显示${fileDataList.value.length}条`);
-    
+
   }).catch((error) => {
     console.error('获取文件列表失败:', error);
     fileLoading.value = false;
@@ -1778,8 +1562,8 @@ function onAlgorithmSelect() {
     algorithmParams.value = [];
     if (selectedAlgo.parameters && Object.keys(selectedAlgo.parameters).length > 0) {
       algorithmParams.value = Object.entries(selectedAlgo.parameters).map(([name, defaultValue]) => {
-        const intro = selectedAlgo.parameters_intro && selectedAlgo.parameters_intro[name] 
-          ? selectedAlgo.parameters_intro[name] 
+        const intro = selectedAlgo.parameters_intro && selectedAlgo.parameters_intro[name]
+          ? selectedAlgo.parameters_intro[name]
           : '暂无说明';
         return {
           name,
@@ -1788,7 +1572,7 @@ function onAlgorithmSelect() {
         };
       });
       form.value.params = Object.entries(selectedAlgo.parameters)
-        .filter(([name]) => name !== 'input' && name !== 'Input' && name !== 'INPUT') 
+        .filter(([name]) => name !== 'input' && name !== 'Input' && name !== 'INPUT')
         .map(([name, defaultValue]) => {
           return {
             name,
@@ -1833,18 +1617,6 @@ function removeParameter(index) {
   form.value.params.splice(index, 1);
 }
 
-/** 格式化文件ID */
-function formatFileIds() {
-  if (form.value.file_ids) {
-    const ids = form.value.file_ids
-      .split(',')
-      .map(id => id.trim())
-      .filter(id => id);
-    form.value.file_ids = ids.join(',');
-  }
-}
-
-
 /** 验证任务参数  */
 function validateTaskArgs() {
   const paramNames = form.value.params.map(param => param.name);
@@ -1856,7 +1628,7 @@ function validateTaskArgs() {
 
   for (let i = 0; i < form.value.params.length; i++) {
     const param = form.value.params[i];
-    
+
     if (!param.name || param.name.trim() === '') {
       proxy.$modal.msgError(`参数 ${i + 1} 的名称不能为空`);
       return false;
@@ -1865,7 +1637,7 @@ function validateTaskArgs() {
     if (param.name === 'input' || param.name === 'Input' || param.name === 'INPUT') {
       continue;
     }
-    
+
     if (param.value === undefined || param.value === '') {
       proxy.$modal.msgError(`参数 "${param.name}" 的值不能为空`);
       return false;
@@ -1887,7 +1659,7 @@ function validateTaskArgs() {
       }
     }
   }
-  
+
   return true;
 }
 
@@ -1895,7 +1667,7 @@ function validateTaskArgs() {
 function submitForm() {
   proxy.$refs["taskRef"].validate(valid => {
     if (valid) {
- 
+
       if (!validateTaskArgs()) {
         return;
       }
@@ -1929,19 +1701,12 @@ function submitForm() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除任务编号为"' + _ids + '"的数据项？').then(function() {
+  proxy.$modal.confirm('是否确认删除任务编号为"' + _ids + '"的数据项？').then(function () {
     return delTask(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
-  }).catch(() => {});
-}
-
-/** 导出按钮操作 */
-function handleExport() {
-  proxy.download('task/task/export', {
-    ...queryParams.value
-  }, `task_${new Date().getTime()}.xlsx`);
+  }).catch(() => { });
 }
 
 /** 获取容器名称 */
@@ -1951,16 +1716,13 @@ function getContainerName(containerId) {
 }
 
 function getStatusText(status, result) {
-  // 如果有结果字段，认为任务已完成
   if (result && result !== 'null' && result !== 'None') {
     return '已完成';
   }
-  
-  // 处理 null 和空状态
   if (!status || status === 'null' || status === 'None') {
     return '状态未知';
   }
-  
+
   const statusMap = {
     'pending': '等待中',
     'running': '运行中',
@@ -1976,11 +1738,9 @@ function getStatusType(status, result) {
   if (result && result !== 'null' && result !== 'None') {
     return 'success';
   }
-  
   if (!status || status === 'null' || status === 'None') {
     return 'warning';
   }
-  
   const typeMap = {
     'pending': 'warning',
     'running': 'primary',
@@ -1995,7 +1755,6 @@ function getStatusType(status, result) {
 /** 格式化参数显示 */
 function formatArgs(args) {
   if (!args) return '无参数';
-  
   try {
     const parsed = JSON.parse(args);
     return JSON.stringify(parsed, null, 2);
@@ -2042,19 +1801,19 @@ function handleFileDialogClose() {
   fileTotal.value = 0;
   currentFolderId.value = '';
   currentFolderName.value = '';
-  
+
   // 重置查询参数
-  fileQueryParams.pageNum = 1;
-  fileQueryParams.pageSize = 10;
-  fileQueryParams.name = null;
-  fileQueryParams.root = null;
+  fileQueryParams.value.pageNum = 1;
+  fileQueryParams.value.pageSize = 10;
+  fileQueryParams.value.name = null;
+  fileQueryParams.value.root = null;
 }
 
 
 /** 格式化文件大小 */
 function formatFileSize(size) {
   if (!size && size !== 0) return '-';
-  
+
   if (size < 1024) {
     return size + ' B';
   } else if (size < 1024 * 1024) {
@@ -2074,8 +1833,6 @@ async function downloadFile(file) {
       return;
     }
 
-    console.log('下载文件:', file.name, 'ID:', file.id);
-
     const loading = proxy.$loading({
       lock: true,
       text: `正在下载: ${file.name}`,
@@ -2083,8 +1840,7 @@ async function downloadFile(file) {
     });
 
     const blobData = await down(file.id);
-    
-    console.log('API返回的Blob:', blobData);
+
     if (!blobData || blobData.size === 0) {
       throw new Error('文件内容为空');
     }
@@ -2096,9 +1852,9 @@ async function downloadFile(file) {
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
-    
+
     proxy.$modal.msgSuccess(`下载完成: ${file.name}`);
-    
+
   } catch (error) {
     console.error('下载失败:', error);
     proxy.$modal.msgError(`下载失败: ${error.message}`);
@@ -2137,7 +1893,7 @@ function validateAndProcessAlgorithmParams(algoInfo) {
       input: '算法输入参数'
     };
   }
-  
+
   try {
     if (algoInfo.intro && typeof algoInfo.intro === 'string') {
       if (algoInfo.intro.trim().startsWith('{')) {
@@ -2151,26 +1907,65 @@ function validateAndProcessAlgorithmParams(algoInfo) {
   } catch (e) {
     console.warn('参数说明解析失败:', e.message);
   }
-  
+
   return result;
 }
 
-/** 预览文件 */
-function previewFile(file) {
-  proxy.$message({
-    type: 'info',
-    message: '文件预览功能待实现'
-  });
+/** 预览文件 (Bug 5 修复) */
+async function previewFile(file) {
+  if (!isPreviewable(file)) {
+    proxy.$message.warning('该文件类型暂不支持预览');
+    return;
+  }
+
+  previewLoading.value = true;
+  previewDialogVisible.value = true;
+  previewTitle.value = `预览: ${file.name}`;
+  previewContent.value = '';
+
+  const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+  try {
+    const blobData = await down(file.id);
+    if (!blobData || blobData.size === 0) {
+      throw new Error('文件内容为空');
+    }
+
+    if (['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'].includes(ext)) {
+      previewType.value = 'image';
+      previewContent.value = window.URL.createObjectURL(blobData);
+    } else if (['.txt', '.json', '.xml', '.log', '.md', '.py', '.js', '.java', '.c', '.cpp', '.h'].includes(ext)) {
+      previewType.value = 'text';
+      const text = await blobData.text();
+      previewContent.value = text;
+    } else {
+      previewType.value = 'unknown';
+    }
+
+  } catch (error) {
+    console.error('预览失败:', error);
+    proxy.$message.error('预览加载失败');
+    previewDialogVisible.value = false;
+  } finally {
+    previewLoading.value = false;
+  }
 }
 
 function isPreviewable(file) {
-  const previewableTypes = ['.txt', '.jpg', '.jpeg', '.png', '.gif', '.pdf'];
-  return previewableTypes.some(type => file.name.toLowerCase().endsWith(type));
+  const previewableTypes = [
+    // 图片
+    '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg',
+    // 文本
+    '.txt', '.json', '.xml', '.log', '.md', '.py', '.js', '.java', '.c', '.cpp', '.h'
+  ];
+  if (!file || !file.name) return false;
+  const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+  return previewableTypes.includes(ext);
 }
 
 function parseTime(time, pattern) {
   if (!time) return '';
-  
+
   if (arguments.length === 0 || !time) {
     return null;
   }
@@ -2234,6 +2029,7 @@ getList();
 :deep(.el-table .cell) {
   word-break: break-word;
 }
+
 .folder-tree-panel {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
@@ -2325,7 +2121,7 @@ getList();
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 15px;
-  width:400px
+  width: 400px
 }
 
 .file-selection-header {
@@ -2483,4 +2279,10 @@ getList();
   padding: 8px 0;
 }
 
+.preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
 </style>

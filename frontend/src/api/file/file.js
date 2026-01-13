@@ -52,7 +52,7 @@ export function UpzipFile(){
     method:'post'
   })
 }
-
+//下载文件
 export function down(id) {
   return request({
     url: 'file/file/' + id,

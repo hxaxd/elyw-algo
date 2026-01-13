@@ -14,7 +14,7 @@ class AppSettings(BaseSettings):
     """
 
     app_env: str = 'dev'
-    app_name: str = 'elyw-algo'
+    app_name: str = 'app'
     app_root_path: str = '/dev-api'
     app_host: str = '0.0.0.0'
     app_port: int = 9099
@@ -43,9 +43,9 @@ class DataBaseSettings(BaseSettings):
     db_type: str = 'postgresql'
     db_host: str = '127.0.0.1'
     db_port: int = 5432
-    db_username: str = 'elyw'
-    db_password: str = 'elyw1234'
-    db_database: str = 'elyw_algo'
+    db_username: str = 'app'
+    db_password: str = 'app1234'
+    db_database: str = 'app_db'
     db_echo: bool = True
     db_max_overflow: int = 10
     db_pool_size: int = 50
